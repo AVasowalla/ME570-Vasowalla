@@ -31,11 +31,8 @@ class Polygon:
         """
         Plot the polygon using Matplotlib.
         """
-        diffs = np.diff(self.vertices, axis=1)
-        fig, ax = plt.subplots()
-        ax.quiver(self.vertices[:-1, 0], self.vertices[:-1, 1], diffs[:, 0],
-                  diffs[:, 1], style)
-        plt.show()
+        ax = plt.gca()
+        ax.quiver(self.vertices[0], self.vertices[1], np.roll(self.vertices[0], 1)-self.vertices[0], np.roll(self.vertices[1], 1)-self.vertices[1], angles = 'xy', scale_units='xy', scale = 1, color = style)
 
     def is_filled(self):
         """
@@ -162,7 +159,7 @@ def angle(vertex0, vertex1, vertex2, angle_type='unsigned'):
 
 if __name__ == '__main__':
     poly1 = Polygon(np.array([[0, 1, -1], [0, 1, 2]]))
-    print(poly1.vertices)
     poly2 = Polygon(np.array([[-1, 1, 0], [2, 1, 0]]))
-    print(poly2.vertices)
-    poly1.plot(['red', 'red', 'blue'])
+    poly1.plot(['red'])
+    poly2.plot(['green'])
+    plt.show()
