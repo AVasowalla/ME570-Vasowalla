@@ -32,14 +32,43 @@ class Polygon:
         Plot the polygon using Matplotlib.
         """
         ax = plt.gca()
-        ax.quiver(self.vertices[0], self.vertices[1], np.roll(self.vertices[0], 1)-self.vertices[0], np.roll(self.vertices[1], 1)-self.vertices[1], angles = 'xy', scale_units='xy', scale = 1, color = style)
+        ax.quiver(
+            self.vertices[0],
+            self.vertices[1],
+            np.roll(self.vertices[0], 1) - self.vertices[0],
+            np.roll(self.vertices[1], 1) - self.vertices[1],
+            angles="xy",
+            scale_units="xy",
+            scale=1,
+            color=style,
+        )
+        [ymin, ymax] = ax.get_ylim()
+        [xmin, xmax] = ax.get_xlim()
+
+        if self.is_filled():
+            ax.fill(self.vertices[0], self.vertices[1], facecolor=style, alpha=0.5)
+        else:
+            ax.fill(
+                [xmin, xmin, xmax, xmax],
+                [ymin, ymax, ymax, ymin],
+                color=style,
+                alpha=0.5,
+            )
+            ax.fill(self.vertices[0], self.vertices[1], facecolor="white")
 
     def is_filled(self):
         """
         Checks the ordering of the vertices, and returns whether the polygon is
         filled in or not.
         """
-        pass  # Substitute with your code
+        signed_area = 0.5 * np.sum(
+            (
+                self.vertices[0] * np.roll(self.vertices[1], -1)
+                - self.vertices[1] * np.roll(self.vertices[0], -1)
+            )
+        )
+        print(signed_area)
+        flag = signed_area > 0
         return flag
 
     def is_self_occcluded(self, idx_vertex, point):
@@ -107,11 +136,11 @@ class Edge:
         pass  # Substitute with your code
 
     def plot(self, *args, **kwargs):
-        """ Plot the edge """
+        """Plot the edge"""
         plt.plot(self.vertices[0, :], self.vertices[1, :], *args, **kwargs)
 
 
-def angle(vertex0, vertex1, vertex2, angle_type='unsigned'):
+def angle(vertex0, vertex1, vertex2, angle_type="unsigned"):
     """
     Compute the angle between two edges  vertex0-- vertex1 and  vertex0--
     vertex2 having an endpoint in common. The angle is computed by starting
@@ -146,20 +175,20 @@ def angle(vertex0, vertex1, vertex2, angle_type='unsigned'):
     edge_angle = math.atan2(s_angle, c_angle)
 
     angle_type = angle_type.lower()
-    if angle_type == 'signed':
+    if angle_type == "signed":
         # nothing to do
         pass
-    elif angle_type == 'unsigned':
+    elif angle_type == "unsigned":
         edge_angle = (edge_angle + 2 * math.pi) % (2 * math.pi)
     else:
-        raise ValueError('Invalid argument angle_type')
+        raise ValueError("Invalid argument angle_type")
 
     return edge_angle
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     poly1 = Polygon(np.array([[0, 1, -1], [0, 1, 2]]))
     poly2 = Polygon(np.array([[-1, 1, 0], [2, 1, 0]]))
-    poly1.plot(['red'])
-    poly2.plot(['green'])
+    poly1.plot("red")
+    poly2.plot("green")
     plt.show()
