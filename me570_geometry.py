@@ -76,7 +76,7 @@ class Polygon:
         you will see that, for each example, only one of these cases can be
         consistent with the arrow directions.
         """
-        tol = 2.22e-16
+        tol = 2.22e-14
         if idx_vertex == self.vertices.shape[1] - 1:
             idx_next = 0
             idx_prev = idx_vertex - 1
@@ -212,7 +212,7 @@ class Edge:
         function should always return the result that edges are
         non-intersecting.
         """
-        tol = 2.22e-16
+        tol = 2.22e-14
         self_mag = self.get_magnitude()
         edge_mag = edge.get_magnitude()
 
@@ -258,6 +258,9 @@ class Edge:
             self_slope, self_b = self.get_slope_and_b()
             edge_slope, edge_b = edge.get_slope_and_b()
 
+            if abs(edge_slope - self_slope) < tol:
+                return False
+
             intercept_x = (self_b - edge_b) / (edge_slope - self_slope)
             intercept_y = self_slope * intercept_x + self_b
 
@@ -282,8 +285,6 @@ class Edge:
             and min(edge.vertices[0, :]) < intercept_x < max(edge.vertices[0, :])
         ):
             return True
-        if abs(self.get_slope_and_b()[0] - edge.get_slope_and_b()[0]) < tol:
-            return False
 
         return False
 
@@ -300,7 +301,7 @@ def angle(vertex0, vertex1, vertex2, angle_type="unsigned"):
     counterclockwise manner until the edge  vertex0-- vertex2 is found.
     """
     # tolerance to check for coincident points
-    tol = 2.22e-16
+    tol = 2.22e-14
 
     # compute vectors corresponding to the two edges, and normalize
     vec1 = vertex1 - vertex0
