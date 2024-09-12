@@ -42,21 +42,19 @@ class Polygon:
             scale=1,
             color=style,
         )
-        [ymin, ymax] = ax.get_ylim()
-        [xmin, xmax] = ax.get_xlim()
+        # [ymin, ymax] = ax.get_ylim()
+        # [xmin, xmax] = ax.get_xlim()
 
         if self.is_filled():
             ax.fill(self.vertices[0], self.vertices[1], facecolor=style, alpha=0.5)
-        """
-        else:
-            ax.fill(
-                [xmin, xmin, xmax, xmax],
-                [ymin, ymax, ymax, ymin],
-                color=style,
-                alpha=0.5,
-            )
-            ax.fill(self.vertices[0], self.vertices[1], facecolor="white")
-        """
+        # else:
+        #    ax.fill(
+        #        [xmin, xmin, xmax, xmax],
+        #        [ymin, ymax, ymax, ymin],
+        #        color=style,
+        #        alpha=0.5,
+        #    )
+        #    ax.fill(self.vertices[0], self.vertices[1], facecolor="white")
 
     def is_filled(self):
         """
