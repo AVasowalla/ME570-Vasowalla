@@ -135,7 +135,7 @@ class Edge:
         function should always return the result that edges are
         non-intersecting.
         """
-        tol = 0.001
+        tol = 2.22e-16
         self_mag = sum((self.vertices[:, 0] - self.vertices[:, 1]) ** 2)
         edge_mag = sum((edge.vertices[:, 0] - edge.vertices[:, 1]) ** 2)
 
