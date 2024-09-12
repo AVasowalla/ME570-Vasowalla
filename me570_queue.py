@@ -7,7 +7,7 @@ from numbers import Number
 
 
 class PriorityQueue:
-    """ Implements a priority queue """
+    """Implements a priority queue"""
 
     def __init__(self):
         """

@@ -86,7 +86,24 @@ class Polygon:
         you will see that, for each example, only one of these cases can be
         consistent with the arrow directions.
         """
-        pass  # Substitute with your code
+        tol = 2.22e-16
+        if idx_vertex == self.vertices.shape[1] - 1:
+            idx_next = 0
+            idx_prev = idx_vertex - 1
+        elif idx_vertex == 0:
+            idx_prev = self.vertices.shape[1] - 1
+            idx_next = idx_vertex + 1
+        else:
+            idx_prev = idx_vertex - 1
+            idx_next = idx_vertex + 1
+
+        vertex0 = self.vertices[:, idx_vertex]
+        vertex1 = self.vertices[:, idx_next]
+        vertex2 = self.vertices[:, idx_prev]
+
+        shape_angle = angle(vertex0, vertex1, vertex2, "unsigned")
+        point_angle = angle(vertex0, vertex1, point, "unsigned")
+        flag_point = point_angle < shape_angle + tol
         return flag_point
 
     def is_visible(self, idx_vertex, test_points):
