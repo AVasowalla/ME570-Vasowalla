@@ -98,7 +98,7 @@ def polygon_is_visible_test():
     Polygon.flip.
      - Repeat item item:test-polygon above with the reversed polygons.
     """
-    test_points = np.random.rand(2, 5)
+    test_points = np.random.rand(2, 1)
     test_points[[0], :] = test_points[[0], :] * 5
     test_points[[1], :] = test_points[[1], :] * 4 - 2
 
@@ -106,7 +106,8 @@ def polygon_is_visible_test():
 
     for polygon in polygons:
         fig, ax = plt.subplots()
-        test_points_with_polygon = np.hstack((test_points, polygon.vertices))
+        # test_points_with_polygon = np.hstack((test_points, polygon.vertices))
+        test_points_with_polygon = test_points
         polygon.plot("blue")
         for idx_vertex in range(polygon.vertices.shape[1]):
             flag_points = polygon.is_visible(idx_vertex, test_points_with_polygon)
@@ -130,10 +131,14 @@ def polygon_is_visible_test():
                     )
                 )
                 temp_edge.plot(style)
+                plt.xlim(0, 5)
+                plt.ylim(-2, 2)
+                plt.gca().axis("equal")
     for polygon in polygons:
         polygon.flip()
         fig, ax = plt.subplots()
-        test_points_with_polygon = np.hstack((test_points, polygon.vertices))
+        # test_points_with_polygon = np.hstack((test_points, polygon.vertices))
+        test_points_with_polygon = test_points
         polygon.plot("blue")
         for idx_vertex in range(polygon.vertices.shape[1]):
             flag_points = polygon.is_visible(idx_vertex, test_points_with_polygon)
@@ -157,9 +162,9 @@ def polygon_is_visible_test():
                     )
                 )
                 temp_edge.plot(style)
-    plt.xlim(0, 5)
-    plt.ylim(-2, 2)
-    plt.gca().axis("equal")
+                plt.xlim(0, 5)
+                plt.ylim(-2, 2)
+                plt.gca().axis("equal")
     plt.show()
 
 
@@ -239,4 +244,4 @@ def priority_test():
 
 
 if __name__ == "__main__":
-    edge_is_collision_test()
+    polygon_is_visible_test()

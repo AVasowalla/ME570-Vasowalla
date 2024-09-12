@@ -122,18 +122,38 @@ class Polygon:
             test_edges = np.append(
                 test_edges,
                 Edge(
-                    np.array([test_points[:, idx_point], self.vertices[:, idx_vertex]])
+                    np.array(
+                        [
+                            [test_points[0, idx_point], self.vertices[0, idx_vertex]],
+                            [test_points[1, idx_point], self.vertices[1, idx_vertex]],
+                        ]
+                    )
                 ),
             )
         for i in range(self.vertices.shape[1]):
             if i == self.vertices.shape[1] - 1:
                 edges = np.append(
-                    edges, Edge(np.array([self.vertices[:, i], self.vertices[:, 0]]))
+                    edges,
+                    Edge(
+                        np.array(
+                            [
+                                [self.vertices[0, i], self.vertices[0, 0]],
+                                [self.vertices[1, i], self.vertices[1, 0]],
+                            ]
+                        )
+                    ),
                 )
             else:
                 edges = np.append(
                     edges,
-                    Edge(np.array([self.vertices[:, i], self.vertices[:, i + 1]])),
+                    Edge(
+                        np.array(
+                            [
+                                [self.vertices[0, i], self.vertices[0, i + 1]],
+                                [self.vertices[1, i], self.vertices[1, i + 1]],
+                            ]
+                        )
+                    ),
                 )
 
         for test_edge in test_edges:
