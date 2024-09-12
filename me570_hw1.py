@@ -70,6 +70,7 @@ def polygon_is_self_occluded_test():
     plt.text(vertex_prev[0], vertex_prev[1], "vertex_prev")
     plt.text(vertex_next[0], vertex_next[1], "vertex_next")
     plt.text(vertex[0], vertex[1], "vertex")
+    plt.show()
 
 
 def polygon_is_visible_test():

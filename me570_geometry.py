@@ -33,10 +33,10 @@ class Polygon:
         """
         ax = plt.gca()
         ax.quiver(
-            self.vertices[0],
-            self.vertices[1],
-            np.roll(self.vertices[0], 1) - self.vertices[0],
-            np.roll(self.vertices[1], 1) - self.vertices[1],
+            np.roll(self.vertices[0], 1),
+            np.roll(self.vertices[1], 1),
+            self.vertices[0] - np.roll(self.vertices[0], 1),
+            self.vertices[1] - np.roll(self.vertices[1], 1),
             angles="xy",
             scale_units="xy",
             scale=1,
@@ -71,7 +71,7 @@ class Polygon:
         flag = signed_area > 0
         return flag
 
-    def is_self_occcluded(self, idx_vertex, point):
+    def is_self_occluded(self, idx_vertex, point):
         """
         Given the corner of a polygon, checks whether a given point is
         self-occluded or not by that polygon (i.e., if it is ``inside'' the
@@ -97,9 +97,9 @@ class Polygon:
             idx_prev = idx_vertex - 1
             idx_next = idx_vertex + 1
 
-        vertex0 = self.vertices[:, idx_vertex]
-        vertex1 = self.vertices[:, idx_next]
-        vertex2 = self.vertices[:, idx_prev]
+        vertex0 = self.vertices[:, [idx_vertex]]
+        vertex1 = self.vertices[:, [idx_next]]
+        vertex2 = self.vertices[:, [idx_prev]]
 
         shape_angle = angle(vertex0, vertex1, vertex2, "unsigned")
         point_angle = angle(vertex0, vertex1, point, "unsigned")
@@ -111,12 +111,28 @@ class Polygon:
         Checks whether a point p is visible from a vertex v of a polygon. In
         order to be visible, two conditions need to be satisfied:
          - The point p should not be self-occluded with respect to the vertex
-        v\\ (see Polygon.is_self_occluded).
+        v (see Polygon.is_self_occluded).
          - The segment p--v should not collide with  any of the edges of the
         polygon (see Edge.is_collision).
         """
+        edges = np.array(Edge)
+        test_edges = np.array(Edge)
+        flag_points = np.array(bool)
+        for point in test_points:
+            np.append(test_edges, Edge([point, self.vertices[:, [idx_vertex]]]))
+        for i in range(self.vertices.shape[2]):
+            if i == self.vertices.shape[2] - 1:
+                np.append(edges, Edge([self.vertices[:, i], self.vertices[:, 0]]))
+            else:
+                np.append(edges, Edge(self.vertices[:, i : i + 1]))
 
-        pass  # Substitute with your code
+        for test_edge in test_edges:
+            flag = True
+            for edge in edges:
+                if test_edge.is_collision(edge):
+                    flag = False
+            np.append(flag_points, flag)
+
         return flag_points
 
     def is_collision(self, test_points):
