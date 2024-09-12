@@ -20,7 +20,10 @@ def edge_is_collision_test():
     not overlap, and in red otherwise.
     """
 
-    vertices = [np.array([[0, 1], [0, 1]]), np.random.rand(2, 2)]
+    vertices = [
+        np.array([[0.5, 0], [0, 1]]),
+        np.array([[0, 1], [0.5, 0.5]]),
+    ]  # np.random.rand(2, 2)]
     edges = [geometry.Edge(x) for x in vertices]
     flag_collision = edges[0].is_collision(edges[1])
     if flag_collision:
@@ -244,4 +247,4 @@ def priority_test():
 
 
 if __name__ == "__main__":
-    polygon_is_visible_test()
+    edge_is_collision_test()
