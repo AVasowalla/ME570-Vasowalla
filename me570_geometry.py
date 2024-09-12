@@ -189,7 +189,7 @@ class Edge:
         ):
             return False
 
-        elif abs(self.vertices[0, 1] - self.vertices[0, 0]) < tol:
+        if abs(self.vertices[0, 1] - self.vertices[0, 0]) < tol:
             intercept_x = self.vertices[0, 1]
             edge_slope = (edge.vertices[1, 1] - edge.vertices[1, 0]) / (
                 edge.vertices[0, 1] - edge.vertices[0, 0]
@@ -200,7 +200,7 @@ class Edge:
         elif abs(edge.vertices[0, 1] - edge.vertices[0, 0]) < tol:
             intercept_x = edge.vertices[0, 1]
             self_slope = (self.vertices[1, 1] - self.vertices[1, 0]) / (
-                self.vertices[0, 1] - edge.vertices[0, 0]
+                self.vertices[0, 1] - self.vertices[0, 0]
             )
             self_offset = self.vertices[1, 0] - self_slope * self.vertices[0, 0]
             intercept_y = intercept_x * self_slope + self_offset
