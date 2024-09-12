@@ -8,3 +8,6 @@ dependencies:
   - numpy
   - cvxpy
   - matplotlib
+  - pylint
+  - CVXOPT
+  - IPython

@@ -47,6 +47,7 @@ class Polygon:
 
         if self.is_filled():
             ax.fill(self.vertices[0], self.vertices[1], facecolor=style, alpha=0.5)
+        """
         else:
             ax.fill(
                 [xmin, xmin, xmax, xmax],
@@ -55,6 +56,7 @@ class Polygon:
                 alpha=0.5,
             )
             ax.fill(self.vertices[0], self.vertices[1], facecolor="white")
+        """
 
     def is_filled(self):
         """
@@ -67,7 +69,7 @@ class Polygon:
                 - self.vertices[1] * np.roll(self.vertices[0], -1)
             )
         )
-        print(signed_area)
+
         flag = signed_area > 0
         return flag
 
@@ -133,7 +135,12 @@ class Edge:
         function should always return the result that edges are
         non-intersecting.
         """
-        pass  # Substitute with your code
+        tol = 0.001
+        self_mag = sum((self.vertices[:, 0] - self.vertices[:, 1]) ** 2)
+        edge_mag = sum((edge.vertices[:, 0] - edge.vertices[:, 1]) ** 2)
+
+        if self_mag < tol or edge_mag < tol:
+            return False
 
     def plot(self, *args, **kwargs):
         """Plot the edge"""
@@ -188,7 +195,8 @@ def angle(vertex0, vertex1, vertex2, angle_type="unsigned"):
 
 if __name__ == "__main__":
     poly1 = Polygon(np.array([[0, 1, -1], [0, 1, 2]]))
-    poly2 = Polygon(np.array([[-1, 1, 0], [2, 1, 0]]))
+    poly2 = Polygon(np.array([[-5, 5, 4], [6, 5, 4]]))
     poly1.plot("red")
+    plt.show()
     poly2.plot("green")
     plt.show()
