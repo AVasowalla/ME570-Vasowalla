@@ -236,3 +236,7 @@ def priority_test():
     step, display the content of  p_queue.
     """
     pass  # Substitute with your code
+
+
+if __name__ == "__main__":
+    edge_is_collision_test()
