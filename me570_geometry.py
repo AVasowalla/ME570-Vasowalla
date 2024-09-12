@@ -42,19 +42,9 @@ class Polygon:
             scale=1,
             color=style,
         )
-        # [ymin, ymax] = ax.get_ylim()
-        # [xmin, xmax] = ax.get_xlim()
 
         if self.is_filled():
             ax.fill(self.vertices[0], self.vertices[1], facecolor=style, alpha=0.5)
-        # else:
-        #    ax.fill(
-        #        [xmin, xmin, xmax, xmax],
-        #        [ymin, ymax, ymax, ymin],
-        #        color=style,
-        #        alpha=0.5,
-        #    )
-        #    ax.fill(self.vertices[0], self.vertices[1], facecolor="white")
 
     def is_filled(self):
         """
@@ -100,6 +90,9 @@ class Polygon:
         vertex0 = self.vertices[:, [idx_vertex]]
         vertex1 = self.vertices[:, [idx_next]]
         vertex2 = self.vertices[:, [idx_prev]]
+
+        if np.array_equal(vertex0, vertex1) or np.array_equal(vertex0, vertex2):
+            return False
 
         shape_angle = angle(vertex0, vertex1, vertex2, "unsigned")
         point_angle = angle(vertex0, vertex1, point, "unsigned")
@@ -349,6 +342,5 @@ if __name__ == "__main__":
     poly1 = Polygon(np.array([[0, 1, -1], [0, 1, 2]]))
     poly2 = Polygon(np.array([[-5, 5, 4], [6, 5, 4]]))
     poly1.plot("red")
-    plt.show()
     poly2.plot("green")
     plt.show()

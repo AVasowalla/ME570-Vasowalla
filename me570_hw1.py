@@ -20,10 +20,7 @@ def edge_is_collision_test():
     not overlap, and in red otherwise.
     """
 
-    vertices = [
-        np.array([[0.5, 0], [0, 1]]),
-        np.array([[0, 1], [0.5, 0.5]]),
-    ]  # np.random.rand(2, 2)]
+    vertices = [np.array([[0.5, 0], [0, 1]]), np.random.rand(2, 2)]
     edges = [geometry.Edge(x) for x in vertices]
     flag_collision = edges[0].is_collision(edges[1])
     if flag_collision:
@@ -47,6 +44,7 @@ def polygon_is_self_occluded_test():
     """
     vertex = np.zeros((2, 1))
     angles_test = np.random.rand(2) * 2 * pi
+    angles_test[1] = 0
 
     vertex_prev = np.array([[cos(angles_test[0])], [sin(angles_test[0])]])
     vertex_next = np.array([[cos(angles_test[1])], [sin(angles_test[1])]])
@@ -247,4 +245,4 @@ def priority_test():
 
 
 if __name__ == "__main__":
-    edge_is_collision_test()
+    polygon_is_self_occluded_test()

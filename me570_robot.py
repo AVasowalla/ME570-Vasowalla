@@ -23,8 +23,9 @@ def polygons_generate():
     """
     vertices1 = np.array([[0, 5], [-1.11, -0.511]])
     vertices1 = polygons_add_x_reflection(vertices1)
-    vertices2 = np.array([[0, 3.97, 4.17, 5.38, 5.61, 4.5],
-                          [-0.47, -0.5, -0.75, -0.97, -0.5, -0.313]])
+    vertices2 = np.array(
+        [[0, 3.97, 4.17, 5.38, 5.61, 4.5], [-0.47, -0.5, -0.75, -0.97, -0.5, -0.313]]
+    )
     vertices2 = polygons_add_x_reflection(vertices2)
     return (geometry.Polygon(vertices1), geometry.Polygon(vertices2))
 
