@@ -267,16 +267,6 @@ class Edge:
 
             intercept_x = (self_b - edge_b) / (edge_slope - self_slope)
             intercept_y = self_slope * intercept_x + self_b
-        print(intercept_x)
-        print(intercept_y)
-        print(min(self.vertices[1, :]))
-        print(max(self.vertices[1, :]))
-        print(min(self.vertices[0, :]))
-        print(max(self.vertices[0, :]))
-        print(min(edge.vertices[1, :]))
-        print(max(edge.vertices[1, :]))
-        print(min(edge.vertices[0, :]))
-        print(max(edge.vertices[0, :]))
 
         if abs(self_slope) < tol and (
             min(self.vertices[0, :]) < intercept_x < max(self.vertices[0, :])
@@ -299,7 +289,6 @@ class Edge:
             and min(edge.vertices[0, :]) < intercept_x < max(edge.vertices[0, :])
         ):
             return True
-        print("here")
         if abs(self.get_slope_and_b()[0] - edge.get_slope_and_b()[0]) < tol:
             return False
 
