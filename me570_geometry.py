@@ -180,6 +180,9 @@ class Edge:
         self_mag = sum((self.vertices[:, 0] - self.vertices[:, 1]) ** 2)
         edge_mag = sum((edge.vertices[:, 0] - edge.vertices[:, 1]) ** 2)
 
+        if self_mag < tol or edge_mag < tol:
+            return False
+
         self_slope = (self.vertices[1, 1] - self.vertices[1, 0]) / (
             self.vertices[0, 1] - self.vertices[0, 0]
         )
@@ -192,8 +195,6 @@ class Edge:
 
         edge_offset = edge.vertices[1, 0] - edge_slope * edge.vertices[0, 0]
 
-        if self_mag < tol or edge_mag < tol:
-            return False
         if abs(self_slope - edge_slope) < tol:
             return False
 
