@@ -184,12 +184,12 @@ class Edge:
             return False
 
         if (
-            self.vertices[0, 1] == self.vertices[0, 0]
-            and edge.vertices[0, 1] == edge.vertices[0, 0]
+            abs(self.vertices[0, 1] - self.vertices[0, 0]) < tol
+            and abs(edge.vertices[0, 1] - edge.vertices[0, 0]) < tol
         ):
             return False
 
-        if self.vertices[0, 1] == self.vertices[0, 0]:
+        if abs(self.vertices[0, 1] - self.vertices[0, 0]) < tol:
             intercept_x = self.vertices[0, 1]
             edge_slope = (edge.vertices[1, 1] - edge.vertices[1, 0]) / (
                 edge.vertices[0, 1] - edge.vertices[0, 0]
@@ -197,7 +197,7 @@ class Edge:
             edge_offset = edge.vertices[1, 0] - edge_slope * edge.vertices[0, 0]
             intercept_y = intercept_x * edge_slope + edge_offset
 
-        elif edge.vertices[0, 1] == edge.vertices[0, 0]:
+        elif abs(edge.vertices[0, 1] - edge.vertices[0, 0]) < tol:
             intercept_x = edge.vertices[0, 1]
             self_slope = (self.vertices[1, 1] - self.vertices[1, 0]) / (
                 self.vertices[0, 1] - edge.vertices[0, 0]
