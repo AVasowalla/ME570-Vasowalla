@@ -183,23 +183,43 @@ class Edge:
         if self_mag < tol or edge_mag < tol:
             return False
 
-        self_slope = (self.vertices[1, 1] - self.vertices[1, 0]) / (
-            self.vertices[0, 1] - self.vertices[0, 0]
-        )
-
-        self_offset = self.vertices[1, 0] - self_slope * self.vertices[0, 0]
-
-        edge_slope = (edge.vertices[1, 1] - edge.vertices[1, 0]) / (
-            edge.vertices[0, 1] - edge.vertices[0, 0]
-        )
-
-        edge_offset = edge.vertices[1, 0] - edge_slope * edge.vertices[0, 0]
-
-        if abs(self_slope - edge_slope) < tol:
+        if (
+            self.vertices[0, 1] == self.vertices[0, 0]
+            and edge.vertices[0, 1] == edge.vertices[0, 0]
+        ):
             return False
 
-        intercept_x = (self_offset - edge_offset) / (edge_slope - self_slope)
-        intercept_y = self_slope * intercept_x + self_offset
+        if self.vertices[0, 1] == self.vertices[0, 0]:
+            intercept_x = self.vertices[0, 1]
+            edge_slope = (edge.vertices[1, 1] - edge.vertices[1, 0]) / (
+                edge.vertices[0, 1] - edge.vertices[0, 0]
+            )
+            edge_offset = edge.vertices[1, 0] - edge_slope * edge.vertices[0, 0]
+            intercept_y = intercept_x * edge_slope + edge_offset
+
+        elif edge.vertices[0, 1] == edge.vertices[0, 0]:
+            intercept_x = edge.vertices[0, 1]
+            self_slope = (self.vertices[1, 1] - self.vertices[1, 0]) / (
+                self.vertices[0, 1] - edge.vertices[0, 0]
+            )
+            self_offset = self.vertices[1, 0] - self_slope * self.vertices[0, 0]
+            intercept_y = intercept_x * self_slope + self_offset
+
+        else:
+            self_slope = (self.vertices[1, 1] - self.vertices[1, 0]) / (
+                self.vertices[0, 1] - self.vertices[0, 0]
+            )
+            self_offset = self.vertices[1, 0] - self_slope * self.vertices[0, 0]
+            edge_slope = (edge.vertices[1, 1] - edge.vertices[1, 0]) / (
+                edge.vertices[0, 1] - edge.vertices[0, 0]
+            )
+            edge_offset = edge.vertices[1, 0] - edge_slope * edge.vertices[0, 0]
+
+            if abs(self_slope - edge_slope) < tol:
+                return False
+
+            intercept_x = (self_offset - edge_offset) / (edge_slope - self_slope)
+            intercept_y = self_slope * intercept_x + self_offset
 
         if (
             min(self.vertices[1, :]) < intercept_y < max(self.vertices[1, :])
