@@ -20,10 +20,142 @@ def edge_is_collision_test():
     not overlap, and in red otherwise.
     """
 
-    vertices = [
-        np.array([[0, 1], [0, 1]]),
-        np.array([[0, 1], [-1, 0]]),
-    ]  # np.random.rand(2, 2)]
+    vertices = [np.array([[0, 1], [0, 1]]), np.random.rand(2, 2)]
+    edges = [geometry.Edge(x) for x in vertices]
+    flag_collision = edges[0].is_collision(edges[1])
+    if flag_collision:
+        style = "r"
+    else:
+        style = "g"
+    style = style + "-o"
+    for edge in edges:
+        print(edge.vertices)
+        edge.plot(style)
+
+    plt.show()
+
+    # Second Vertical
+    vertices = [np.array([[0, 1], [0, 1]]), np.array([[0.5, 0.5], [0, 1]])]
+    edges = [geometry.Edge(x) for x in vertices]
+    flag_collision = edges[0].is_collision(edges[1])
+    if flag_collision:
+        style = "r"
+    else:
+        style = "g"
+    style = style + "-o"
+    for edge in edges:
+        print(edge.vertices)
+        edge.plot(style)
+
+    plt.show()
+
+    # First Vertical
+    vertices = [np.array([[0.5, 0.5], [0, 1]]), np.array([[0, 1], [0, 1]])]
+    edges = [geometry.Edge(x) for x in vertices]
+    flag_collision = edges[0].is_collision(edges[1])
+    if flag_collision:
+        style = "r"
+    else:
+        style = "g"
+    style = style + "-o"
+    for edge in edges:
+        print(edge.vertices)
+        edge.plot(style)
+
+    plt.show()
+
+    # Second Horizontal
+    vertices = [np.array([[0, 1], [0, 1]]), np.array([[0, 1], [0.5, 0.5]])]
+    edges = [geometry.Edge(x) for x in vertices]
+    flag_collision = edges[0].is_collision(edges[1])
+    if flag_collision:
+        style = "r"
+    else:
+        style = "g"
+    style = style + "-o"
+    for edge in edges:
+        print(edge.vertices)
+        edge.plot(style)
+
+    plt.show()
+
+    # First Horizontal
+    vertices = [np.array([[0, 1], [0.5, 0.5]]), np.array([[0, 1], [0, 1]])]
+    edges = [geometry.Edge(x) for x in vertices]
+    flag_collision = edges[0].is_collision(edges[1])
+    if flag_collision:
+        style = "r"
+    else:
+        style = "g"
+    style = style + "-o"
+    for edge in edges:
+        print(edge.vertices)
+        edge.plot(style)
+
+    plt.show()
+
+    # Perpendicular A
+    vertices = [np.array([[0.5, 0.5], [0, 1]]), np.array([[0, 1], [0.5, 0.5]])]
+    edges = [geometry.Edge(x) for x in vertices]
+    flag_collision = edges[0].is_collision(edges[1])
+    if flag_collision:
+        style = "r"
+    else:
+        style = "g"
+    style = style + "-o"
+    for edge in edges:
+        print(edge.vertices)
+        edge.plot(style)
+
+    plt.show()
+
+    # Perpendicular B
+    vertices = [np.array([[0, 1], [0.5, 0.5]]), np.array([[0.5, 0.5], [0, 1]])]
+    edges = [geometry.Edge(x) for x in vertices]
+    flag_collision = edges[0].is_collision(edges[1])
+    if flag_collision:
+        style = "r"
+    else:
+        style = "g"
+    style = style + "-o"
+    for edge in edges:
+        print(edge.vertices)
+        edge.plot(style)
+
+    plt.show()
+
+    # Parallel
+    vertices = [np.array([[0, 1], [0, 1]]), np.array([[0, 1], [-1, 0]])]
+    edges = [geometry.Edge(x) for x in vertices]
+    flag_collision = edges[0].is_collision(edges[1])
+    if flag_collision:
+        style = "r"
+    else:
+        style = "g"
+    style = style + "-o"
+    for edge in edges:
+        print(edge.vertices)
+        edge.plot(style)
+
+    plt.show()
+
+    # Parallel Vertical
+    vertices = [np.array([[0, 0], [0, 1]]), np.array([[1, 1], [-1, 0]])]
+    edges = [geometry.Edge(x) for x in vertices]
+    flag_collision = edges[0].is_collision(edges[1])
+    if flag_collision:
+        style = "r"
+    else:
+        style = "g"
+    style = style + "-o"
+    for edge in edges:
+        print(edge.vertices)
+        edge.plot(style)
+
+    plt.show()
+
+    # Parallel Horizontal
+    vertices = [np.array([[0, 1], [1, 1]]), np.array([[0, 1], [0, 0]])]
     edges = [geometry.Edge(x) for x in vertices]
     flag_collision = edges[0].is_collision(edges[1])
     if flag_collision:
@@ -48,11 +180,11 @@ def polygon_is_self_occluded_test():
     vertex = np.zeros((2, 1))
     angles_test = np.random.rand(2) * 2 * pi
     angles_test[1] = 0
+    angles_test[0] = pi / 2
 
     vertex_prev = np.array([[cos(angles_test[0])], [sin(angles_test[0])]])
     vertex_next = np.array([[cos(angles_test[1])], [sin(angles_test[1])]])
-
-    nb_points = 61
+    nb_points = 5
     angle_point = np.linspace(0, 2 * pi, nb_points)
     point = np.vstack([cos(angle_point), sin(angle_point)])
 
@@ -248,4 +380,4 @@ def priority_test():
 
 
 if __name__ == "__main__":
-    edge_is_collision_test()
+    polygon_is_self_occluded_test()
