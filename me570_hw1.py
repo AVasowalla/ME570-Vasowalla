@@ -32,6 +32,8 @@ def edge_is_collision_test():
         print(edge.vertices)
         edge.plot(style)
 
+    plt.show()
+
 
 def polygon_is_self_occluded_test():
     """
