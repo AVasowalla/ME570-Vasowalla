@@ -98,6 +98,69 @@ def polygon_is_visible_test():
     Polygon.flip.
      - Repeat item item:test-polygon above with the reversed polygons.
     """
+    test_points = np.random.rand(2, 5)
+    test_points[[0], :] = test_points[[0], :] * 5
+    test_points[[1], :] = test_points[[1], :] * 4 - 2
+
+    polygons = robot.polygons
+
+    for polygon in polygons:
+        fig, ax = plt.subplots()
+        test_points_with_polygon = np.hstack((test_points, polygon.vertices))
+        polygon.plot("blue")
+        for idx_vertex in range(polygon.vertices.shape[1]):
+            flag_points = polygon.is_visible(idx_vertex, test_points_with_polygon)
+            for idx_test in range(flag_points.shape[0]):
+                if flag_points[idx_test]:
+                    style = "r"
+                else:
+                    style = "g"
+                temp_edge = geometry.Edge(
+                    np.array(
+                        [
+                            [
+                                test_points_with_polygon[0, idx_test],
+                                polygon.vertices[0, idx_vertex],
+                            ],
+                            [
+                                test_points_with_polygon[1, idx_test],
+                                polygon.vertices[1, idx_vertex],
+                            ],
+                        ]
+                    )
+                )
+                temp_edge.plot(style)
+    for polygon in polygons:
+        polygon.flip()
+        fig, ax = plt.subplots()
+        test_points_with_polygon = np.hstack((test_points, polygon.vertices))
+        polygon.plot("blue")
+        for idx_vertex in range(polygon.vertices.shape[1]):
+            flag_points = polygon.is_visible(idx_vertex, test_points_with_polygon)
+            for idx_test in range(flag_points.shape[0]):
+                if flag_points[idx_test]:
+                    style = "r"
+                else:
+                    style = "g"
+                temp_edge = geometry.Edge(
+                    np.array(
+                        [
+                            [
+                                test_points_with_polygon[0, idx_test],
+                                polygon.vertices[0, idx_vertex],
+                            ],
+                            [
+                                test_points_with_polygon[1, idx_test],
+                                polygon.vertices[1, idx_vertex],
+                            ],
+                        ]
+                    )
+                )
+                temp_edge.plot(style)
+    plt.xlim(0, 5)
+    plt.ylim(-2, 2)
+    plt.gca().axis("equal")
+    plt.show()
 
 
 def polygon_is_collision_test_plot(polygon, test_points):

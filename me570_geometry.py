@@ -115,23 +115,33 @@ class Polygon:
          - The segment p--v should not collide with  any of the edges of the
         polygon (see Edge.is_collision).
         """
-        edges = np.array(Edge)
-        test_edges = np.array(Edge)
-        flag_points = np.array(bool)
-        for point in test_points:
-            np.append(test_edges, Edge([point, self.vertices[:, [idx_vertex]]]))
-        for i in range(self.vertices.shape[2]):
-            if i == self.vertices.shape[2] - 1:
-                np.append(edges, Edge([self.vertices[:, i], self.vertices[:, 0]]))
+        edges = np.array([])
+        test_edges = np.array([])
+        flag_points = np.array([])
+        for idx_point in range(test_points.shape[1]):
+            test_edges = np.append(
+                test_edges,
+                Edge(
+                    np.array([test_points[:, idx_point], self.vertices[:, idx_vertex]])
+                ),
+            )
+        for i in range(self.vertices.shape[1]):
+            if i == self.vertices.shape[1] - 1:
+                edges = np.append(
+                    edges, Edge(np.array([self.vertices[:, i], self.vertices[:, 0]]))
+                )
             else:
-                np.append(edges, Edge(self.vertices[:, i : i + 1]))
+                edges = np.append(
+                    edges,
+                    Edge(np.array([self.vertices[:, i], self.vertices[:, i + 1]])),
+                )
 
         for test_edge in test_edges:
             flag = True
             for edge in edges:
                 if test_edge.is_collision(edge):
                     flag = False
-            np.append(flag_points, flag)
+            flag_points = np.append(flag_points, flag)
 
         return flag_points
 
