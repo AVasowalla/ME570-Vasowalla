@@ -139,8 +139,6 @@ class Polygon:
         flag_points = np.array([])
         for idx_point in range(test_points.shape[1]):
             if self.is_self_occluded(idx_vertex, test_points[:, [idx_point]]):
-                print(self.vertices[:, [idx_vertex]])
-                print(test_points[:, [idx_point]])
                 flag_points = np.append(flag_points, False)
             else:
                 test_edge = Edge(

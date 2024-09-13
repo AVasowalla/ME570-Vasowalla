@@ -231,14 +231,12 @@ def polygon_is_visible_test():
     polygons = robot.polygons
 
     for polygon in polygons:
-        # fig, ax = plt.subplots()
-        # test_points_with_polygon = np.hstack((test_points, polygon.vertices))
-        test_points_with_polygon = polygon.vertices[:, 0:2]
-        print(test_points_with_polygon)
+        fig, ax = plt.subplots()
+        test_points_with_polygon = np.hstack((test_points, polygon.vertices))
         polygon.plot("blue")
         for idx_vertex in range(polygon.vertices.shape[1]):
             flag_points = polygon.is_visible(idx_vertex, test_points_with_polygon)
-            for idx_test in range(test_points_with_polygon.shape[0]):
+            for idx_test in range(test_points_with_polygon.shape[1]):
                 if flag_points[idx_test]:
                     style = "g"
                 else:
@@ -257,23 +255,19 @@ def polygon_is_visible_test():
                         ]
                     )
                 )
-                polygon.plot("blue")
                 temp_edge.plot(style)
                 plt.xlim(0, 5)
                 plt.ylim(-2, 2)
                 plt.gca().axis("equal")
-                plt.show()
-        break
-    """
+
     for polygon in polygons:
         polygon.flip()
         fig, ax = plt.subplots()
-        # test_points_with_polygon = np.hstack((test_points, polygon.vertices))
-        test_points_with_polygon = polygon.vertices
+        test_points_with_polygon = np.hstack((test_points, polygon.vertices))
         polygon.plot("blue")
         for idx_vertex in range(polygon.vertices.shape[1]):
             flag_points = polygon.is_visible(idx_vertex, test_points_with_polygon)
-            for idx_test in range(flag_points.shape[0]):
+            for idx_test in range(test_points_with_polygon.shape[1]):
                 if flag_points[idx_test]:
                     style = "g"
                 else:
@@ -296,7 +290,7 @@ def polygon_is_visible_test():
                 plt.xlim(0, 5)
                 plt.ylim(-2, 2)
                 plt.gca().axis("equal")
-    """
+
     plt.show()
 
 
