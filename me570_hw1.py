@@ -237,8 +237,30 @@ def priority_test():
      - Remove all elements by repeated extractions.  enumerate After each
     step, display the content of  p_queue.
     """
-    pass  # Substitute with your code
+    p_queue = queue.PriorityQueue()
+    print(p_queue.queue_list)
+    p_queue.insert("Oranges", 4.5)
+    p_queue.insert("Apples", 1)
+    p_queue.insert("Bananas", 2.7)
+    print(p_queue.queue_list)
+    min_key, min_cost = p_queue.min_extract()
+    print(min_key)
+    print(min_cost)
+    print(p_queue.queue_list)
+    p_queue.insert("Cantaloupe", 3)
+    check = p_queue.is_member("Apples")
+    print(check)
+    check = p_queue.is_member("Bananas")
+    print(check)
+    check = p_queue.is_member("(1.5)")
+    print(check)
+    min_key, min_cost = p_queue.min_extract()
+    while min_key is not None:
+        print(min_key)
+        print(min_cost)
+        print(p_queue.queue_list)
+        min_key, min_cost = p_queue.min_extract()
 
 
 if __name__ == "__main__":
-    polygon_is_self_occluded_test()
+    priority_test()

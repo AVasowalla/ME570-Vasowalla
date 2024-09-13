@@ -48,6 +48,7 @@ class PriorityQueue:
             if pair[1] < cost:
                 cost = pair[1]
                 key = pair[0]
+        self.queue_list.remove((key, cost))
         return key, cost
 
     def is_member(self, key):
