@@ -101,14 +101,9 @@ class Polygon:
         flag_point = tol < point_angle < shape_angle + tol
         return flag_point
 
-    def is_visible(self, idx_vertex, test_points):
+    def create_edges(self):
         """
-        Checks whether a point p is visible from a vertex v of a polygon. In
-        order to be visible, two conditions need to be satisfied:
-         - The point p should not be self-occluded with respect to the vertex
-        v (see Polygon.is_self_occluded).
-         - The segment p--v should not collide with  any of the edges of the
-        polygon (see Edge.is_collision).
+        Creates an array of edges from a polygon
         """
         edges = np.array([])
         for i in range(self.vertices.shape[1]):
@@ -136,6 +131,18 @@ class Polygon:
                         )
                     ),
                 )
+        return edges
+
+    def is_visible(self, idx_vertex, test_points):
+        """
+        Checks whether a point p is visible from a vertex v of a polygon. In
+        order to be visible, two conditions need to be satisfied:
+         - The point p should not be self-occluded with respect to the vertex
+        v (see Polygon.is_self_occluded).
+         - The segment p--v should not collide with  any of the edges of the
+        polygon (see Edge.is_collision).
+        """
+        edges = self.create_edges()
         flag_points = np.array([])
         for idx_point in range(test_points.shape[1]):
             if self.is_self_occluded(idx_vertex, test_points[:, [idx_point]]):
@@ -165,7 +172,18 @@ class Polygon:
         the context of this homework, this function is best implemented using
         Polygon.is_visible.
         """
-        pass  # Substitute with your code
+        flag_points = np.array([])
+        test_flags = np.array([])
+        for idx_vertex in range(self.vertices.shape[1]):
+            test_flags = np.vstack(
+                (test_flags, self.is_visible(idx_vertex, test_points))
+            )
+        for idx_point in range(test_flags.shape[1]):
+            if np.all(test_points[:, idx_point]):
+                np.append(flag_points, True)
+            else:
+                np.append(flag_points, False)
+
         return flag_points
 
 
