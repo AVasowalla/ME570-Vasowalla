@@ -184,7 +184,7 @@ def polygon_is_self_occluded_test():
 
     vertex_prev = np.array([[cos(angles_test[0])], [sin(angles_test[0])]])
     vertex_next = np.array([[cos(angles_test[1])], [sin(angles_test[1])]])
-    nb_points = 5
+    nb_points = 61
     angle_point = np.linspace(0, 2 * pi, nb_points)
     point = np.vstack([cos(angle_point), sin(angle_point)])
 
