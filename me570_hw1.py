@@ -29,7 +29,6 @@ def edge_is_collision_test():
         style = "g"
     style = style + "-o"
     for edge in edges:
-        print(edge.vertices)
         edge.plot(style)
 
     plt.show()
@@ -44,7 +43,6 @@ def edge_is_collision_test():
         style = "g"
     style = style + "-o"
     for edge in edges:
-        print(edge.vertices)
         edge.plot(style)
 
     plt.show()
@@ -59,7 +57,6 @@ def edge_is_collision_test():
         style = "g"
     style = style + "-o"
     for edge in edges:
-        print(edge.vertices)
         edge.plot(style)
 
     plt.show()
@@ -74,7 +71,6 @@ def edge_is_collision_test():
         style = "g"
     style = style + "-o"
     for edge in edges:
-        print(edge.vertices)
         edge.plot(style)
 
     plt.show()
@@ -89,7 +85,6 @@ def edge_is_collision_test():
         style = "g"
     style = style + "-o"
     for edge in edges:
-        print(edge.vertices)
         edge.plot(style)
 
     plt.show()
@@ -104,7 +99,6 @@ def edge_is_collision_test():
         style = "g"
     style = style + "-o"
     for edge in edges:
-        print(edge.vertices)
         edge.plot(style)
 
     plt.show()
@@ -119,7 +113,6 @@ def edge_is_collision_test():
         style = "g"
     style = style + "-o"
     for edge in edges:
-        print(edge.vertices)
         edge.plot(style)
 
     plt.show()
@@ -134,7 +127,6 @@ def edge_is_collision_test():
         style = "g"
     style = style + "-o"
     for edge in edges:
-        print(edge.vertices)
         edge.plot(style)
 
     plt.show()
@@ -149,7 +141,6 @@ def edge_is_collision_test():
         style = "g"
     style = style + "-o"
     for edge in edges:
-        print(edge.vertices)
         edge.plot(style)
 
     plt.show()
@@ -164,7 +155,6 @@ def edge_is_collision_test():
         style = "g"
     style = style + "-o"
     for edge in edges:
-        print(edge.vertices)
         edge.plot(style)
 
     plt.show()
@@ -380,4 +370,4 @@ def priority_test():
 
 
 if __name__ == "__main__":
-    polygon_is_self_occluded_test()
+    edge_is_collision_test()

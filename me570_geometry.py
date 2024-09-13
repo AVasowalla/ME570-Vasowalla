@@ -205,6 +205,18 @@ class Edge:
         b = self.vertices[1, 0] - slope * self.vertices[0, 0]
         return [slope, b]
 
+    def is_interior_on_edge(self, point, tol):
+        """
+        Checks if a points is on an edge (not an endpoint)
+        """
+        if self.is_vertical(tol):
+            return min(self.vertices[1, :]) < point[1] < max(self.vertices[1, :])
+        if abs(self.get_slope_and_b()[0]) < tol:
+            return min(self.vertices[0, :]) < point[0] < max(self.vertices[0, :])
+        return min(self.vertices[0, :]) < point[0] < max(self.vertices[0, :]) and min(
+            self.vertices[1, :]
+        ) < point[1] < max(self.vertices[1, :])
+
     def is_collision(self, edge):
         """
         Returns  True if the two edges intersect.  Note: if the two edges
@@ -229,52 +241,18 @@ class Edge:
             edge_slope, edge_b = edge.get_slope_and_b()
             intercept_x = self.vertices[0, 0]
             intercept_y = edge_slope * intercept_x + edge_b
-            if (
-                abs(edge_slope) < tol
-                and (
-                    min(self.vertices[1, :]) < intercept_y < max(self.vertices[1, :])
-                    and min(edge.vertices[0, :])
-                    < intercept_x
-                    < max(edge.vertices[0, :])
-                )
-            ) or (
-                abs(edge_slope) >= tol
-                and (
-                    min(self.vertices[1, :]) < intercept_y < max(self.vertices[1, :])
-                    and min(edge.vertices[1, :])
-                    < intercept_y
-                    < max(edge.vertices[1, :])
-                    and min(edge.vertices[0, :])
-                    < intercept_x
-                    < max(edge.vertices[0, :])
-                )
-            ):
+            if edge.is_interior_on_edge(
+                [intercept_x, intercept_y], tol
+            ) and self.is_interior_on_edge([intercept_x, intercept_y], tol):
                 return True
 
         elif edge.is_vertical(tol):
             self_slope, self_b = self.get_slope_and_b()
             intercept_x = edge.vertices[0, 0]
             intercept_y = self_slope * intercept_x + self_b
-            if (
-                abs(self_slope) < tol
-                and (
-                    min(self.vertices[0, :]) < intercept_x < max(self.vertices[0, :])
-                    and min(edge.vertices[1, :])
-                    < intercept_y
-                    < max(edge.vertices[1, :])
-                )
-            ) or (
-                abs(self_slope) >= tol
-                and (
-                    min(self.vertices[1, :]) < intercept_y < max(self.vertices[1, :])
-                    and min(self.vertices[0, :])
-                    < intercept_x
-                    < max(self.vertices[0, :])
-                    and min(edge.vertices[1, :])
-                    < intercept_y
-                    < max(edge.vertices[1, :])
-                )
-            ):
+            if edge.is_interior_on_edge(
+                [intercept_x, intercept_y], tol
+            ) and self.is_interior_on_edge([intercept_x, intercept_y], tol):
                 return True
 
         else:
@@ -287,29 +265,9 @@ class Edge:
             intercept_x = (self_b - edge_b) / (edge_slope - self_slope)
             intercept_y = self_slope * intercept_x + self_b
 
-        if (
-            abs(self_slope) < tol
-            and (
-                min(self.vertices[0, :]) < intercept_x < max(self.vertices[0, :])
-                and min(edge.vertices[1, :]) < intercept_y < max(edge.vertices[1, :])
-                and min(edge.vertices[0, :]) < intercept_x < max(edge.vertices[0, :])
-            )
-        ) or (
-            abs(edge_slope) < tol
-            and (
-                min(self.vertices[1, :]) < intercept_y < max(self.vertices[1, :])
-                and min(self.vertices[0, :]) < intercept_x < max(self.vertices[0, :])
-                and min(edge.vertices[0, :]) < intercept_x < max(edge.vertices[0, :])
-            )
-        ):
-            return True
-
-        return (
-            min(self.vertices[1, :]) < intercept_y < max(self.vertices[1, :])
-            and min(self.vertices[0, :]) < intercept_x < max(self.vertices[0, :])
-            and min(edge.vertices[1, :]) < intercept_y < max(edge.vertices[1, :])
-            and min(edge.vertices[0, :]) < intercept_x < max(edge.vertices[0, :])
-        )
+        return edge.is_interior_on_edge(
+            [intercept_x, intercept_y], tol
+        ) and self.is_interior_on_edge([intercept_x, intercept_y], tol)
 
     def plot(self, *args, **kwargs):
         """Plot the edge"""
