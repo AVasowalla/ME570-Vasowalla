@@ -111,24 +111,6 @@ class Polygon:
         polygon (see Edge.is_collision).
         """
         edges = np.array([])
-        test_edges = np.array([])
-        flag_points = np.array([])
-        for idx_point in range(test_points.shape[1]):
-            if self.is_self_occluded(idx_vertex, test_points[:, [idx_point]]):
-                flag = False
-                flag_points = np.append(flag_points, flag)
-                continue
-            test_edges = np.append(
-                test_edges,
-                Edge(
-                    np.array(
-                        [
-                            [test_points[0, idx_point], self.vertices[0, idx_vertex]],
-                            [test_points[1, idx_point], self.vertices[1, idx_vertex]],
-                        ]
-                    )
-                ),
-            )
         for i in range(self.vertices.shape[1]):
             if i == self.vertices.shape[1] - 1:
                 edges = np.append(
@@ -154,13 +136,28 @@ class Polygon:
                         )
                     ),
                 )
+        flag_points = np.array([])
+        for idx_point in range(test_points.shape[1]):
+            if self.is_self_occluded(idx_vertex, test_points[:, [idx_point]]):
+                print(self.vertices[:, [idx_vertex]])
+                print(test_points[:, [idx_point]])
+                flag_points = np.append(flag_points, False)
+            else:
+                test_edge = Edge(
+                    np.array(
+                        [
+                            [test_points[0, idx_point], self.vertices[0, idx_vertex]],
+                            [test_points[1, idx_point], self.vertices[1, idx_vertex]],
+                        ]
+                    )
+                )
+                for edge in edges:
+                    flag = True
+                    if test_edge.is_collision(edge):
+                        flag = False
+                        break
+                flag_points = np.append(flag_points, flag)
 
-        for test_edge in test_edges:
-            flag = True
-            for edge in edges:
-                if test_edge.is_collision(edge):
-                    flag = False
-            flag_points = np.append(flag_points, flag)
         return flag_points
 
     def is_collision(self, test_points):
