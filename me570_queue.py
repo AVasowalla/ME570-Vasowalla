@@ -34,18 +34,27 @@ class PriorityQueue:
         """
         Add an element to the queue.
         """
-        pass  # Substitute with your code
+        self.queue_list.append((key, cost))
 
     def min_extract(self):
         """
         Extract the element with minimum cost from the queue.
         """
-        pass  # Substitute with your code
+        if len(self.queue_list) == 0:
+            return None, None
+        cost = self.queue_list[0][1]
+        key = self.queue_list[0][0]
+        for pair in self.queue_list:
+            if pair[1] < cost:
+                cost = pair[1]
+                key = pair[0]
         return key, cost
 
     def is_member(self, key):
         """
         Check whether an element with a given key is in the queue or not.
         """
-        pass  # Substitute with your code
-        return flag
+        for pair in self.queue_list:
+            if key == pair[0]:
+                return True
+        return False

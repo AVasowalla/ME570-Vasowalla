@@ -43,8 +43,6 @@ def polygon_is_self_occluded_test():
     """
     vertex = np.zeros((2, 1))
     angles_test = np.random.rand(2) * 2 * pi
-    angles_test[1] = 0
-    angles_test[0] = pi / 2
 
     vertex_prev = np.array([[cos(angles_test[0])], [sin(angles_test[0])]])
     vertex_next = np.array([[cos(angles_test[1])], [sin(angles_test[1])]])
@@ -98,7 +96,7 @@ def polygon_is_visible_test():
     Polygon.flip.
      - Repeat item item:test-polygon above with the reversed polygons.
     """
-    test_points = np.random.rand(2, 1)
+    test_points = np.random.rand(2, 50)
     test_points[[0], :] = test_points[[0], :] * 5
     test_points[[1], :] = test_points[[1], :] * 4 - 2
 
@@ -136,7 +134,7 @@ def polygon_is_visible_test():
 
     for polygon in polygons:
         polygon.flip()
-        fig, ax = plt.subplots()
+        _, _ = plt.subplots()
         test_points_with_polygon = np.hstack((test_points, polygon.vertices))
         polygon.plot("blue")
         for idx_vertex in range(polygon.vertices.shape[1]):
@@ -243,4 +241,4 @@ def priority_test():
 
 
 if __name__ == "__main__":
-    polygon_is_collision_test()
+    polygon_is_self_occluded_test()
