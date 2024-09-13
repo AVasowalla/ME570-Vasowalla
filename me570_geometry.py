@@ -172,7 +172,7 @@ class Polygon:
         the context of this homework, this function is best implemented using
         Polygon.is_visible.
         """
-        flag_points = np.empty((1, test_points.shape[1]), bool)
+        flag_points = np.empty((0, test_points.shape[1]), bool)
         test_flags = np.empty((0, test_points.shape[1]))
         for idx_vertex in range(self.vertices.shape[1]):
             test_flags = np.vstack(
@@ -180,9 +180,9 @@ class Polygon:
             )
         for idx_point in range(test_flags.shape[1]):
             if np.any(test_flags[:, idx_point]):
-                flag_points = np.append(flag_points, True)
-            else:
                 flag_points = np.append(flag_points, False)
+            else:
+                flag_points = np.append(flag_points, True)
         return flag_points
 
 

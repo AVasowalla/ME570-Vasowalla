@@ -199,7 +199,7 @@ def polygon_is_self_occluded_test():
     plt.show()
 
 
-def polygon_is_visible_test():
+def polygon_is_visible_test(test_points):
     """
     This function should perform the following operations:
      - Create an array  test_points with dimensions [2 x 5] containing
@@ -224,9 +224,9 @@ def polygon_is_visible_test():
     Polygon.flip.
      - Repeat item item:test-polygon above with the reversed polygons.
     """
-    test_points = np.random.rand(2, 1)
-    test_points[[0], :] = test_points[[0], :] * 5
-    test_points[[1], :] = test_points[[1], :] * 4 - 2
+    # test_points = np.random.rand(2, 1)
+    # test_points[[0], :] = test_points[[0], :] * 5
+    # test_points[[1], :] = test_points[[1], :] * 4 - 2
 
     polygons = robot.polygons
 
