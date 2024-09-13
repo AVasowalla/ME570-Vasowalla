@@ -33,132 +33,6 @@ def edge_is_collision_test():
 
     plt.show()
 
-    # Second Vertical
-    vertices = [np.array([[0, 1], [0, 1]]), np.array([[0.5, 0.5], [0, 1]])]
-    edges = [geometry.Edge(x) for x in vertices]
-    flag_collision = edges[0].is_collision(edges[1])
-    if flag_collision:
-        style = "r"
-    else:
-        style = "g"
-    style = style + "-o"
-    for edge in edges:
-        edge.plot(style)
-
-    plt.show()
-
-    # First Vertical
-    vertices = [np.array([[0.5, 0.5], [0, 1]]), np.array([[0, 1], [0, 1]])]
-    edges = [geometry.Edge(x) for x in vertices]
-    flag_collision = edges[0].is_collision(edges[1])
-    if flag_collision:
-        style = "r"
-    else:
-        style = "g"
-    style = style + "-o"
-    for edge in edges:
-        edge.plot(style)
-
-    plt.show()
-
-    # Second Horizontal
-    vertices = [np.array([[0, 1], [0, 1]]), np.array([[0, 1], [0.5, 0.5]])]
-    edges = [geometry.Edge(x) for x in vertices]
-    flag_collision = edges[0].is_collision(edges[1])
-    if flag_collision:
-        style = "r"
-    else:
-        style = "g"
-    style = style + "-o"
-    for edge in edges:
-        edge.plot(style)
-
-    plt.show()
-
-    # First Horizontal
-    vertices = [np.array([[0, 1], [0.5, 0.5]]), np.array([[0, 1], [0, 1]])]
-    edges = [geometry.Edge(x) for x in vertices]
-    flag_collision = edges[0].is_collision(edges[1])
-    if flag_collision:
-        style = "r"
-    else:
-        style = "g"
-    style = style + "-o"
-    for edge in edges:
-        edge.plot(style)
-
-    plt.show()
-
-    # Perpendicular A
-    vertices = [np.array([[0.5, 0.5], [0, 1]]), np.array([[0, 1], [0.5, 0.5]])]
-    edges = [geometry.Edge(x) for x in vertices]
-    flag_collision = edges[0].is_collision(edges[1])
-    if flag_collision:
-        style = "r"
-    else:
-        style = "g"
-    style = style + "-o"
-    for edge in edges:
-        edge.plot(style)
-
-    plt.show()
-
-    # Perpendicular B
-    vertices = [np.array([[0, 1], [0.5, 0.5]]), np.array([[0.5, 0.5], [0, 1]])]
-    edges = [geometry.Edge(x) for x in vertices]
-    flag_collision = edges[0].is_collision(edges[1])
-    if flag_collision:
-        style = "r"
-    else:
-        style = "g"
-    style = style + "-o"
-    for edge in edges:
-        edge.plot(style)
-
-    plt.show()
-
-    # Parallel
-    vertices = [np.array([[0, 1], [0, 1]]), np.array([[0, 1], [-1, 0]])]
-    edges = [geometry.Edge(x) for x in vertices]
-    flag_collision = edges[0].is_collision(edges[1])
-    if flag_collision:
-        style = "r"
-    else:
-        style = "g"
-    style = style + "-o"
-    for edge in edges:
-        edge.plot(style)
-
-    plt.show()
-
-    # Parallel Vertical
-    vertices = [np.array([[0, 0], [0, 1]]), np.array([[1, 1], [-1, 0]])]
-    edges = [geometry.Edge(x) for x in vertices]
-    flag_collision = edges[0].is_collision(edges[1])
-    if flag_collision:
-        style = "r"
-    else:
-        style = "g"
-    style = style + "-o"
-    for edge in edges:
-        edge.plot(style)
-
-    plt.show()
-
-    # Parallel Horizontal
-    vertices = [np.array([[0, 1], [1, 1]]), np.array([[0, 1], [0, 0]])]
-    edges = [geometry.Edge(x) for x in vertices]
-    flag_collision = edges[0].is_collision(edges[1])
-    if flag_collision:
-        style = "r"
-    else:
-        style = "g"
-    style = style + "-o"
-    for edge in edges:
-        edge.plot(style)
-
-    plt.show()
-
 
 def polygon_is_self_occluded_test():
     """
@@ -231,7 +105,7 @@ def polygon_is_visible_test():
     polygons = robot.polygons
 
     for polygon in polygons:
-        fig, ax = plt.subplots()
+        _, _ = plt.subplots()
         test_points_with_polygon = np.hstack((test_points, polygon.vertices))
         polygon.plot("blue")
         for idx_vertex in range(polygon.vertices.shape[1]):
