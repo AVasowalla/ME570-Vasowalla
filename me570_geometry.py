@@ -114,6 +114,10 @@ class Polygon:
         test_edges = np.array([])
         flag_points = np.array([])
         for idx_point in range(test_points.shape[1]):
+            if self.is_self_occluded(idx_vertex, test_points[:, [idx_point]]):
+                flag = False
+                flag_points = np.append(flag_points, flag)
+                continue
             test_edges = np.append(
                 test_edges,
                 Edge(
@@ -157,7 +161,6 @@ class Polygon:
                 if test_edge.is_collision(edge):
                     flag = False
             flag_points = np.append(flag_points, flag)
-
         return flag_points
 
     def is_collision(self, test_points):

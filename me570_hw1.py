@@ -225,23 +225,25 @@ def polygon_is_visible_test():
      - Repeat item item:test-polygon above with the reversed polygons.
     """
     test_points = np.random.rand(2, 1)
+    print(test_points)
     test_points[[0], :] = test_points[[0], :] * 5
+    print(test_points)
     test_points[[1], :] = test_points[[1], :] * 4 - 2
+    print(test_points)
 
     polygons = robot.polygons
 
     for polygon in polygons:
         fig, ax = plt.subplots()
-        # test_points_with_polygon = np.hstack((test_points, polygon.vertices))
-        test_points_with_polygon = test_points
+        test_points_with_polygon = np.hstack((test_points, polygon.vertices))
         polygon.plot("blue")
         for idx_vertex in range(polygon.vertices.shape[1]):
             flag_points = polygon.is_visible(idx_vertex, test_points_with_polygon)
             for idx_test in range(flag_points.shape[0]):
                 if flag_points[idx_test]:
-                    style = "r"
-                else:
                     style = "g"
+                else:
+                    style = "r"
                 temp_edge = geometry.Edge(
                     np.array(
                         [
@@ -263,16 +265,15 @@ def polygon_is_visible_test():
     for polygon in polygons:
         polygon.flip()
         fig, ax = plt.subplots()
-        # test_points_with_polygon = np.hstack((test_points, polygon.vertices))
-        test_points_with_polygon = test_points
+        test_points_with_polygon = np.hstack((test_points, polygon.vertices))
         polygon.plot("blue")
         for idx_vertex in range(polygon.vertices.shape[1]):
             flag_points = polygon.is_visible(idx_vertex, test_points_with_polygon)
             for idx_test in range(flag_points.shape[0]):
                 if flag_points[idx_test]:
-                    style = "r"
-                else:
                     style = "g"
+                else:
+                    style = "r"
                 temp_edge = geometry.Edge(
                     np.array(
                         [
@@ -370,4 +371,4 @@ def priority_test():
 
 
 if __name__ == "__main__":
-    edge_is_collision_test()
+    polygon_is_visible_test()
