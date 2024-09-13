@@ -312,13 +312,12 @@ def polygon_is_collision_test_plot(polygon, test_points):
     for i, point in enumerate(test_points_with_polygon.T):
         x_point = point[0]
         y_point = point[1]
-        if flag_points[i] is True:
+        if flag_points[i]:
             red_x.append(x_point)
             red_y.append(y_point)
         else:
             green_x.append(x_point)
             green_y.append(y_point)
-
     plt.scatter(green_x, green_y, color="g")
     plt.scatter(red_x, red_y, color="r")
 
@@ -370,4 +369,4 @@ def priority_test():
 
 
 if __name__ == "__main__":
-    polygon_is_visible_test()
+    polygon_is_collision_test()
