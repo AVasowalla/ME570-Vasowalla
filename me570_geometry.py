@@ -96,13 +96,9 @@ class Polygon:
 
         shape_angle = angle(vertex0, vertex1, vertex2, "unsigned")
         point_angle = angle(vertex0, vertex1, point, "unsigned")
-        print(shape_angle)
-        print(point_angle)
-        print(point)
         if point_angle < tol or abs(point_angle - shape_angle) < tol:
             return False
         flag_point = tol < point_angle < shape_angle + tol
-        print(flag_point)
         return flag_point
 
     def is_visible(self, idx_vertex, test_points):
