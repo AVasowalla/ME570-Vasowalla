@@ -290,11 +290,6 @@ class Edge:
 
             intercept_x = (self_b - edge_b) / (edge_slope - self_slope)
             intercept_y = self_slope * intercept_x + self_b
-        if edge.is_interior_on_edge(
-            [intercept_x, intercept_y], tol
-        ) and self.is_interior_on_edge([intercept_x, intercept_y], tol):
-            print(intercept_x)
-            print(intercept_y)
         return edge.is_interior_on_edge(
             [intercept_x, intercept_y], tol
         ) and self.is_interior_on_edge([intercept_x, intercept_y], tol)
