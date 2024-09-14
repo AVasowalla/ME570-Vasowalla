@@ -225,12 +225,23 @@ class Edge:
         Checks if a points is on an edge (not an endpoint)
         """
         if self.is_vertical(tol):
-            return min(self.vertices[1, :]) < point[1] < max(self.vertices[1, :])
+            return (
+                min(self.vertices[1, :]) + tol
+                < point[1]
+                < max(self.vertices[1, :]) - tol
+            )
         if abs(self.get_slope_and_b()[0]) < tol:
-            return min(self.vertices[0, :]) < point[0] < max(self.vertices[0, :])
-        return min(self.vertices[0, :]) < point[0] < max(self.vertices[0, :]) and min(
-            self.vertices[1, :]
-        ) < point[1] < max(self.vertices[1, :])
+            return (
+                min(self.vertices[0, :]) + tol
+                < point[0]
+                < max(self.vertices[0, :]) - tol
+            )
+        return (
+            min(self.vertices[0, :]) + tol < point[0] < max(self.vertices[0, :]) - tol
+            and min(self.vertices[1, :]) + tol
+            < point[1]
+            < max(self.vertices[1, :]) - tol
+        )
 
     def is_collision(self, edge):
         """
@@ -279,7 +290,11 @@ class Edge:
 
             intercept_x = (self_b - edge_b) / (edge_slope - self_slope)
             intercept_y = self_slope * intercept_x + self_b
-
+        if edge.is_interior_on_edge(
+            [intercept_x, intercept_y], tol
+        ) and self.is_interior_on_edge([intercept_x, intercept_y], tol):
+            print(intercept_x)
+            print(intercept_y)
         return edge.is_interior_on_edge(
             [intercept_x, intercept_y], tol
         ) and self.is_interior_on_edge([intercept_x, intercept_y], tol)

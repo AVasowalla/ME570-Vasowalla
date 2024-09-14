@@ -263,4 +263,4 @@ def priority_test():
 
 
 if __name__ == "__main__":
-    priority_test()
+    polygon_is_visible_test()
