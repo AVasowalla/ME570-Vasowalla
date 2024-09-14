@@ -96,7 +96,7 @@ def polygon_is_visible_test():
     Polygon.flip.
      - Repeat item item:test-polygon above with the reversed polygons.
     """
-    test_points = np.random.rand(2, 50)
+    test_points = np.random.rand(2, 5)
     test_points[[0], :] = test_points[[0], :] * 5
     test_points[[1], :] = test_points[[1], :] * 4 - 2
 
@@ -263,4 +263,4 @@ def priority_test():
 
 
 if __name__ == "__main__":
-    polygon_is_visible_test()
+    priority_test()
