@@ -375,7 +375,7 @@ def numel(var):
 
 def rot2d(theta):
     """
-    Create a 2-D rotation matrix from the angle  theta according to (1).
+    Create a 2-D rotation matrix from the angle theta according to (1).
     """
     rot_theta = np.array(
         [[math.cos(theta), -math.sin(theta)], [math.sin(theta), math.cos(theta)]]

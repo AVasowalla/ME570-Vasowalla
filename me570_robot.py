@@ -3,6 +3,8 @@
 Representation of a simple robot used in the assignments
 """
 
+import math
+import matplotlib.pyplot as plt
 import numpy as np
 
 import me570_geometry as geometry
@@ -81,4 +83,17 @@ class TwoLink:
         return vertex_effector_dot
 
 
-polygons = polygons_generate()
+if __name__ == "__main__":
+    polygons = polygons_generate()
+    rot2d = geometry.rot2d(math.pi / 4)
+    transformed_poly_vertices = np.zeros(polygons[1].vertices.shape)
+    for i in range(polygons[1].vertices.shape[1]):
+        print(polygons[1].vertices[:, i])
+        print(np.matmul(rot2d, polygons[1].vertices[:, i]))
+        transformed_poly_vertices[:, i] = np.matmul(
+            rot2d, polygons[1].vertices[:, i]
+        ) + np.array(([3, 1]))
+    transformed_poly = geometry.Polygon(transformed_poly_vertices)
+    transformed_poly.plot("blue")
+    polygons[1].plot("blue")
+    plt.show()
