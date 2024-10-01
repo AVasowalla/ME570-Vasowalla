@@ -59,9 +59,40 @@ def torus_twolink_plot_jacobian():
     in the loop for drawing the manipulator, in order to obtain a ``movie-like'' presentation
     of the motion.
     """
-    pass  # Substitute with your code
+    a_lines = [
+        np.array([[3 / 4 * math.pi], [0]]),
+        np.array([[3 / 4 * math.pi], [3 / 4 * math.pi]]),
+        np.array([[-3 / 4 * math.pi], [3 / 4 * math.pi]]),
+        np.array([[0], [-3 / 4 * math.pi]]),
+    ]
+
+    b_line = np.array([[-1], [-1]])
+    nb_points = 7
+
+    fig, ax = plt.subplots(2, 2)
+    i = 0
+
+    for a_line in a_lines:
+        plt.sca(ax[i // 2, i % 2])
+        theta_points = me570_geometry.line_linspace(a_line, b_line, 0, 1, nb_points)
+        two_link = me570_robot.TwoLink()
+        for j in range(theta_points.shape[1]):
+            two_link.plot(theta_points[:, [j]], "blue")
+            vertex_effector_dot = two_link.jacobian(theta_points[:, [j]], a_line)
+            [vertex_effector, _, _] = two_link.kinematic_map(theta_points[:, [j]])
+            plt.quiver(
+                vertex_effector[0],
+                vertex_effector[1],
+                vertex_effector_dot[0],
+                vertex_effector_dot[1],
+                angles="xy",
+                scale_units="xy",
+                scale=4,
+                color="red",
+            )
+        i += 1
 
 
 if __name__ == "__main__":
-    twolink_plot_collision_test()
+    torus_twolink_plot_jacobian()
     plt.show()
