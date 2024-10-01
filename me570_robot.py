@@ -47,9 +47,7 @@ class TwoLink:
         vertex_effector_transf = np.matmul(
             rot_b1_to_w, (np.matmul(rot_b2_to_b1, vertex_effector) + translate_b2_to_b1)
         )
-        polygons = polygons_generate()
-        polygon1_transf = polygons[0]
-        polygon2_transf = polygons[1]
+        (polygon1_transf, polygon2_transf) = polygons_generate()
         polygon1_transf.kinematic_map(theta[0])
         polygon2_transf.kinematic_map(theta[1], translate_b2_to_b1)
         polygon2_transf.kinematic_map(theta[0])
