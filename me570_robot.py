@@ -101,7 +101,38 @@ class TwoLink:
         Implement the map for the Jacobian of the position of the end effector with respect to the
         joint angles as derived in Question~ q:jacobian-effector.
         """
-        pass  # Substitute with your code
+        vertex_effector_dot = np.zeros((2, theta.shape[1]))
+        for i in range(theta.shape[1]):
+            inner = np.matmul(
+                np.array(
+                    [
+                        [
+                            -np.sin(theta[0]) * theta_dot[0],
+                            -np.cos(theta[0]) * theta_dot[0],
+                        ],
+                        [
+                            np.cos(theta[0]) * theta_dot[0],
+                            -np.sin(theta[0]) * theta_dot[0],
+                        ],
+                    ]
+                ),
+                np.array([[5], [0]]),
+            ) + np.array([[5], [0]])
+            vertex_effector_dot[:, [i]] = np.matmul(
+                np.array(
+                    [
+                        [
+                            -np.sin(theta[1]) * theta_dot[1],
+                            -np.cos(theta[1]) * theta_dot[1],
+                        ],
+                        [
+                            np.cos(theta[1]) * theta_dot[1],
+                            -np.sin(theta[1]) * theta_dot[1],
+                        ],
+                    ]
+                ),
+                inner,
+            )
         return vertex_effector_dot
 
 
