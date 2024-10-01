@@ -468,7 +468,13 @@ class Torus:
         the overlap between the charts, you can use different colors each one of them,
         and making them slightly transparent.
         """
-        pass  # Substitute with your code
+        nb_points = 33
+        regular_grid = Grid(
+            np.linspace(0, 2 * np.pi, nb_points), np.linspace(0, 2 * np.pi, nb_points)
+        )
+        torus_eval = regular_grid.eval(self.phi)
+        axis = gca_3d()
+        axis.plot_surface(torus_eval[:, :, 0], torus_eval[:, :, 1], torus_eval[:, :, 2])
 
     def phi_push_curve(self, a_line, b_line):
         """
@@ -509,7 +515,7 @@ class Torus:
         Uses the function phi to plot two perpendicular rings
         """
         nb_points = 200
-        theta_ring = np.linspace(0, 15 / 8 * np.pi, nb_points)
+        theta_ring = np.linspace(0, 2 * np.pi, nb_points)
         theta_zeros = np.zeros((1, nb_points))
         data = [
             np.vstack((theta_ring, theta_zeros)),
@@ -525,5 +531,5 @@ class Torus:
 
 if __name__ == "__main__":
     torus = Torus()
-    torus.phi_test()
+    torus.plot()
     plt.show()
