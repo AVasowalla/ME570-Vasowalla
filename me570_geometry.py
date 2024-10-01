@@ -4,6 +4,7 @@ Classes and functions for Polygons and Edges
 
 import math
 import numbers
+import scipy
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -444,7 +445,15 @@ class Torus:
         """
         Implements equation (eq:chartTorus).
         """
-        pass  # Substitute with your code
+        x_torus = np.zeros((3, theta.shape[1]))
+        for i in range(theta.shape[1]):
+            t = theta[:, i]
+            phi_circle = np.matmul(rot2d(t[0]), np.array([[1], [0]]))
+            r_3 = scipy.linalg.block_diag(rot2d(t[1]), 1)
+            inner = np.matmul(
+                np.array([[1, 0], [0, 0], [0, 1]]), phi_circle
+            ) + np.array([[3], [0], [0]])
+            x_torus[:, [i]] = np.matmul(r_3, inner)
         return x_torus
 
     def plot(self):
@@ -515,8 +524,6 @@ class Torus:
 
 
 if __name__ == "__main__":
-    poly1 = Polygon(np.array([[0, 1, -1], [0, 1, 2]]))
-    poly2 = Polygon(np.array([[-5, 5, 4], [6, 5, 4]]))
-    poly1.plot("red")
-    poly2.plot("green")
+    torus = Torus()
+    torus.phi_test()
     plt.show()
