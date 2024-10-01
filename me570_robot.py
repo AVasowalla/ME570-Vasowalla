@@ -116,7 +116,7 @@ class TwoLink:
                 ]
             )
 
-            vertex_effector_dot[:, [i]] = np.matmul(J, theta_dot[:, i])
+            vertex_effector_dot[:, [i]] = np.matmul(J, theta_dot[:, [i]])
         return vertex_effector_dot
 
 
