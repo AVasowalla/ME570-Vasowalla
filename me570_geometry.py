@@ -4,7 +4,7 @@ Classes and functions for Polygons and Edges
 
 import math
 import numbers
-import scipy
+from scipy import linalg
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -449,7 +449,7 @@ class Torus:
         for i in range(theta.shape[1]):
             t = theta[:, i]
             phi_circle = np.matmul(rot2d(t[0]), np.array([[1], [0]]))
-            r_3 = scipy.lin_alg.block_diag(rot2d(t[1]), 1)
+            r_3 = linalg.block_diag(rot2d(t[1]), 1)
             inner = np.matmul(
                 np.array([[1, 0], [0, 0], [0, 1]]), phi_circle
             ) + np.array([[3], [0], [0]])
