@@ -103,36 +103,20 @@ class TwoLink:
         """
         vertex_effector_dot = np.zeros((2, theta.shape[1]))
         for i in range(theta.shape[1]):
-            inner = np.matmul(
-                np.array(
+            J = np.array(
+                [
                     [
-                        [
-                            -np.sin(theta[0, i]) * theta_dot[0, i],
-                            -np.cos(theta[0, i]) * theta_dot[0, i],
-                        ],
-                        [
-                            np.cos(theta[0, i]) * theta_dot[0, i],
-                            -np.sin(theta[0, i]) * theta_dot[0, i],
-                        ],
-                    ]
-                ),
-                np.array([[5], [0]]),
-            ) + np.array([[5], [0]])
-            vertex_effector_dot[:, [i]] = np.matmul(
-                np.array(
+                        -5 * np.sin(sum(theta[:, i])),
+                        -5 * np.sin(sum(theta[:, i])) - 5 * np.sin(theta[1, i]),
+                    ],
                     [
-                        [
-                            -np.sin(theta[1, i]) * theta_dot[1, i],
-                            -np.cos(theta[1, i]) * theta_dot[1, i],
-                        ],
-                        [
-                            np.cos(theta[1, i]) * theta_dot[1, i],
-                            -np.sin(theta[1, i]) * theta_dot[1, i],
-                        ],
-                    ]
-                ),
-                inner,
+                        5 * np.cos(sum(theta[:, i])),
+                        5 * np.cos(sum(theta[:, i])) + 5 * np.cos(theta[1, i]),
+                    ],
+                ]
             )
+
+            vertex_effector_dot[:, [i]] = np.matmul(J, theta_dot[:, i])
         return vertex_effector_dot
 
 
