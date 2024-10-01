@@ -474,7 +474,12 @@ class Torus:
         )
         torus_eval = regular_grid.eval(self.phi)
         axis = gca_3d()
-        axis.plot_surface(torus_eval[:, :, 0], torus_eval[:, :, 1], torus_eval[:, :, 2])
+        axis.plot_surface(
+            torus_eval[:, :, 0],
+            torus_eval[:, :, 1],
+            torus_eval[:, :, 2],
+            color=("blue", 0.3),
+        )
 
     def phi_push_curve(self, a_line, b_line):
         """
@@ -482,7 +487,9 @@ class Torus:
         generated along the curve phi(t) using line_linspaceLine.linspace with  tMin=0 and  tMax=1,
         and a, b as given in the input arguments.
         """
-        pass  # Substitute with your code
+        nb_points = 31
+        theta = line_linspace(a_line, b_line, 0, 1, nb_points)
+        x_points = self.phi(theta)
         return x_points
 
     def plot_curves(self):
@@ -532,4 +539,5 @@ class Torus:
 if __name__ == "__main__":
     torus = Torus()
     torus.plot()
+    torus.plot_curves()
     plt.show()
