@@ -69,7 +69,7 @@ def torus_twolink_plot_jacobian():
     b_line = np.array([[-1], [-1]])
     nb_points = 7
 
-    fig, ax = plt.subplots(2, 2)
+    _, ax = plt.subplots(2, 2)
     i = 0
 
     for a_line in a_lines:
