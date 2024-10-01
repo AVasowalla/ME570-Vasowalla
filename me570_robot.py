@@ -63,6 +63,8 @@ class TwoLink:
         )
         polygon1_transf.plot(color)
         polygon2_transf.plot(color)
+        ax = plt.gca()
+        ax.axis("equal")
 
     def is_collision(self, theta, points):
         """
@@ -70,7 +72,12 @@ class TwoLink:
         collides with  any of the points, and  False otherwise. Use the function
         Polygon.is_collision to check if each link of the manipulator is in collision.
         """
-        pass  # Substitute with your code
+        flag_theta = np.empty((1, theta.shape[1]))
+        for i in range(theta.shape[1]):
+            _, polygon1_transf, polygon2_transf = self.kinematic_map(theta[:, [i]])
+            flag_poly1 = polygon1_transf.is_collision(points)
+            flag_poly2 = polygon2_transf.is_collision(points)
+            flag_theta[i] = flag_poly1.any() or flag_poly2.any()
         return flag_theta
 
     def plot_collision(self, theta, points):
@@ -94,16 +101,6 @@ class TwoLink:
 
 
 if __name__ == "__main__":
-    polygons = polygons_generate()
-    rot2d = geometry.rot2d(math.pi / 4)
-    transformed_poly_vertices = np.zeros(polygons[1].vertices.shape)
-    for i in range(polygons[1].vertices.shape[1]):
-        print(polygons[1].vertices[:, i])
-        print(np.matmul(rot2d, polygons[1].vertices[:, i]))
-        transformed_poly_vertices[:, i] = np.matmul(
-            rot2d, polygons[1].vertices[:, i]
-        ) + np.array(([3, 1]))
-    transformed_poly = geometry.Polygon(transformed_poly_vertices)
-    transformed_poly.plot("blue")
-    polygons[1].plot("blue")
+    two_link = TwoLink()
+    two_link.plot(np.array([[np.pi / 4], [np.pi / 2]]), "blue")
     plt.show()
