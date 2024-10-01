@@ -47,19 +47,21 @@ def grid_eval_example():
 
 def torus_twolink_plot_jacobian():
     """
-        For each one of the curves used in Question~ q:torusDrawChartsCurves, do the following:
+    For each one of the curves used in Question~ q:torusDrawChartsCurves, do the following:
      - Use Line.linspace to compute the array  thetaPoints for the curve;
      - For each one of the configurations given by the columns of  thetaPoints:
      - Use Twolink.plot to plot the two-link manipulator.
      - Use Twolink.jacobian to compute the velocity of the end effector, and then use quiver to draw
-    that velocity as an arrow starting from the end effector's position.   The function should produce a
-    total of four windows (or, alternatively, a single window with four subplots), each window (or
-    subplot) showing all the configurations of the manipulator superimposed on each other. You can use
-    matplotlib.pyplot.ion and insert a time.sleep command in the loop for drawing the manipulator, in
-    order to obtain a ``movie-like'' presentation of the motion.
+    that velocity as an arrow starting from the end effector's position.
+    The function should produce a total of four windows (or, alternatively, a single window with
+    four subplots), each window (or subplot) showing all the configurations of the manipulator
+    superimposed on each other. You can use matplotlib.pyplot.ion and insert a time.sleep command
+    in the loop for drawing the manipulator, in order to obtain a ``movie-like'' presentation
+    of the motion.
     """
     pass  # Substitute with your code
 
 
 if __name__ == "__main__":
-    grid_eval_example()
+    twolink_plot_collision_test()
+    plt.show()

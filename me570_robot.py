@@ -3,7 +3,6 @@
 Representation of a simple robot used in the assignments
 """
 
-import math
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -58,9 +57,7 @@ class TwoLink:
         This function should use TwoLink.kinematic_map from the previous question together with
         the method Polygon.plot from Homework 1 to plot the manipulator.
         """
-        [vertex_effector_transf, polygon1_transf, polygon2_transf] = self.kinematic_map(
-            theta
-        )
+        [_, polygon1_transf, polygon2_transf] = self.kinematic_map(theta)
         polygon1_transf.plot(color)
         polygon2_transf.plot(color)
         ax = plt.gca()
@@ -74,7 +71,7 @@ class TwoLink:
         """
         flag_theta = np.empty((1, theta.shape[1]))
         for i in range(theta.shape[1]):
-            _, polygon1_transf, polygon2_transf = self.kinematic_map(theta[:, [i]])
+            [_, polygon1_transf, polygon2_transf] = self.kinematic_map(theta[:, [i]])
             flag_poly1 = polygon1_transf.is_collision(points)
             flag_poly2 = polygon2_transf.is_collision(points)
             flag_theta[i] = flag_poly1.any() or flag_poly2.any()
@@ -89,7 +86,15 @@ class TwoLink:
         manipulator is in collision, and green otherwise.
          - Plot the points specified by  points as black asterisks.
         """
-        pass  # Substitute with your code
+        flag_theta = self.is_collision(theta, points)
+        for i in range(flag_theta.shape[1]):
+            if flag_theta[i]:
+                self.plot(theta[:, [i]], "red")
+            else:
+                self.plot(theta[:, [i]], "green")
+
+        ax = plt.gca()
+        ax.plot(points[0, :], points[1, :], "k*")
 
     def jacobian(self, theta, theta_dot):
         """
