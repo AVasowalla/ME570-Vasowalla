@@ -187,6 +187,16 @@ class Polygon:
                 flag_points = np.append(flag_points, True)
         return flag_points
 
+    def kinematic_map(self, theta, translate=np.array([[0], [0]])):
+        """
+        Transforms polygon by theta rotation and T translation
+        """
+        rotation = rot2d(theta)
+        for i in range(self.vertices.shape[1]):
+            self.vertices[:, [i]] = (
+                np.matmul(rotation, self.vertices[:, [i]]) + translate
+            )
+
 
 class Edge:
     """

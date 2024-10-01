@@ -40,7 +40,18 @@ class TwoLink:
         The function returns the coordinate of the end effector, plus the vertices of the links,
         all transformed according to  _1, _2.
         """
-        pass  # Substitute with your code
+        rot_b2_to_b1 = geometry.rot2d(theta[1])
+        rot_b1_to_w = geometry.rot2d(theta[0])
+        translate_b2_to_b1 = np.array([[5], [0]])
+        vertex_effector = np.array([[5], [0]])
+        vertex_effector_transf = np.matmul(
+            rot_b1_to_w, (np.matmul(rot_b2_to_b1, vertex_effector) + translate_b2_to_b1)
+        )
+        polygon1_transf, polygon2_transf = polygons_generate()
+        polygon1_transf.kinematic_map(theta[0])
+        polygon2_transf.kinematic_map(theta[0]).kinematic_map(
+            theta[1], translate_b2_to_b1
+        )
         return vertex_effector_transf, polygon1_transf, polygon2_transf
 
     def plot(self, theta, color):
