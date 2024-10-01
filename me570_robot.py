@@ -107,12 +107,12 @@ class TwoLink:
                 np.array(
                     [
                         [
-                            -np.sin(theta[0]) * theta_dot[0],
-                            -np.cos(theta[0]) * theta_dot[0],
+                            -np.sin(theta[0, [i]]) * theta_dot[0, [i]],
+                            -np.cos(theta[0, [i]]) * theta_dot[0, [i]],
                         ],
                         [
-                            np.cos(theta[0]) * theta_dot[0],
-                            -np.sin(theta[0]) * theta_dot[0],
+                            np.cos(theta[0, [i]]) * theta_dot[0, [i]],
+                            -np.sin(theta[0, [i]]) * theta_dot[0, [i]],
                         ],
                     ]
                 ),
@@ -122,12 +122,12 @@ class TwoLink:
                 np.array(
                     [
                         [
-                            -np.sin(theta[1]) * theta_dot[1],
-                            -np.cos(theta[1]) * theta_dot[1],
+                            -np.sin(theta[1, [i]]) * theta_dot[1, [i]],
+                            -np.cos(theta[1, [i]]) * theta_dot[1, [i]],
                         ],
                         [
-                            np.cos(theta[1]) * theta_dot[1],
-                            -np.sin(theta[1]) * theta_dot[1],
+                            np.cos(theta[1, [i]]) * theta_dot[1, [i]],
+                            -np.sin(theta[1, [i]]) * theta_dot[1, [i]],
                         ],
                     ]
                 ),
