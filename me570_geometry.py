@@ -548,6 +548,5 @@ class Torus:
 
 if __name__ == "__main__":
     torus = Torus()
-    torus.plot()
-    torus.plot_curves()
+    torus.phi_test()
     plt.show()
