@@ -673,7 +673,7 @@ class Sphere:
         for i in range(points.shape[1]):
             dist = distance_between_points(points[:, i], self.center)
             if dist == 0:
-                grad_d_points_sphere[:, [i]] = np.array([0, 0])
+                grad_d_points_sphere[:, [i]] = np.array([[0], [0]])
                 continue
             grad_d_points_sphere[:, [i]] = np.array(
                 [
