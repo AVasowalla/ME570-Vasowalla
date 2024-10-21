@@ -178,11 +178,6 @@ class Total:
             repulsive_sphere = RepulsiveSphere(sphere)
             grad_u_rep[:, [i]] = repulsive_sphere.grad(x_eval)
         grad_u_attr = attractive.grad(x_eval)
-        print(grad_u_rep)
-        print()
-        print(grad_u_rep.sum(axis=1, keepdims=True))
-        print()
-        print()
         grad_u_eval = grad_u_attr + alpha * grad_u_rep.sum(axis=1, keepdims=True)
         return grad_u_eval
 
@@ -209,7 +204,19 @@ class Planner:
         number of steps given by  nb_stepsis reached, or when the norm of the
         vector given by  control is less than 5 10^-3 (equivalently,  5e-3).
         """
-        pass  # Substitute with your code
+        x_path = np.zeros((2, self.nb_steps))
+        u_path = np.zeros((1, self.nb_steps))
+        x_path[:, [0]] = x_start
+        for i in range(1, self.nb_steps):
+            if self.control(x_path[:, [i - 1]]) < 5e-3:
+                x_path[:, [i]] = np.array([[math.nan], [math.nan]])
+                u_path[i] = math.nan
+                continue
+            x_path[:, [i]] = x_path[:, [i - 1]] + self.epsilon * self.control(
+                x_path[:, [i - 1]]
+            )
+            u_path[i] = function(x_path[:, [i - 1]])
+
         return x_path, u_path
 
 
