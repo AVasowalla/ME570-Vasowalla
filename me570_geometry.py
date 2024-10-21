@@ -668,8 +668,8 @@ class Sphere:
                 continue
             grad_d_points_sphere[:, [i]] = np.array(
                 [
-                    (self.center[0] - points[0, i]) / dist,
-                    (self.center[1] - points[1, i]) / dist,
+                    ((points[0, i] - self.center[0]) / dist)  * np.sign(self.radius),
+                    ((points[1, i] - self.center[1]) / dist)  * np.sign(self.radius),
                 ]
             )
         return grad_d_points_sphere
