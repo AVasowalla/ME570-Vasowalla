@@ -194,7 +194,7 @@ class TwoLinkPotential:
         jacobian = two_link.jacobian_matrix(theta_eval)
         w_p_eff = calc_w_p_eff(theta_eval)
         grad_u_eval = total.grad(w_p_eff)
-        grad_u_eval_theta = np.matmul(grad_u_eval, jacobian)
+        grad_u_eval_theta = np.matmul(jacobian, grad_u_eval)
         return grad_u_eval_theta
 
     def run_plot(self, epsilon, nb_steps):
