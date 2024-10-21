@@ -648,7 +648,7 @@ class Sphere:
         Computes the signed distance between points and the sphere, while taking
         into account whether the sphere is hollow or filled in.
         """
-        d_points_sphere = np.zeros(1, points.shape[1])
+        d_points_sphere = np.zeros((1, points.shape[1]))
         for i in range(points.shape[1]):
             d_points_sphere[i] = (
                 distance_between_points(points[:, i], self.center) - abs(self.radius)
