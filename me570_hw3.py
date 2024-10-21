@@ -26,28 +26,54 @@ def sphere_test_collision():
     sphere1 = me570_geometry.Sphere(center, radius, influence)
     sphere2 = me570_geometry.Sphere(center, -1 * radius, influence)
 
-    points = center = np.random.uniform(-10, 10, (2, nb_points))
+    points = center = np.vstack(
+        (
+            np.random.uniform(
+                -(2 * radius + influence) + center[0],
+                (2 * radius + influence) + center[0],
+                (1, nb_points),
+            ),
+            np.random.uniform(
+                -(2 * radius + influence) + center[1],
+                (2 * radius + influence) + center[1],
+                (1, nb_points),
+            ),
+        )
+    )
 
     sphere1.plot("blue")
     sphere1_distances = sphere1.distance(points)
-    sphere1_green_indicies = np.argwhere(sphere1_distances > 0)
-    sphere1_red_indicies = np.argwhere(sphere1_distances <= 0)
+    sphere1_green_indicies = np.flatnonzero(sphere1_distances > 0)
+    sphere1_red_indicies = np.flatnonzero(sphere1_distances <= 0)
     for i in range(sphere1_green_indicies.shape[0]):
         plt.plot(
             points[0, sphere1_green_indicies[i]],
             points[1, sphere1_green_indicies[i]],
-            "green",
+            "g.",
         )
     for i in range(sphere1_red_indicies.shape[0]):
         plt.plot(
             points[0, sphere1_red_indicies[i]],
             points[1, sphere1_red_indicies[i]],
-            "red",
+            "r.",
         )
     plt.show()
     sphere2.plot("blue")
     sphere2_distances = sphere2.distance(points)
-
+    sphere2_green_indicies = np.flatnonzero(sphere2_distances > 0)
+    sphere2_red_indicies = np.flatnonzero(sphere2_distances <= 0)
+    for i in range(sphere2_green_indicies.shape[0]):
+        plt.plot(
+            points[0, sphere2_green_indicies[i]],
+            points[1, sphere2_green_indicies[i]],
+            "g.",
+        )
+    for i in range(sphere2_red_indicies.shape[0]):
+        plt.plot(
+            points[0, sphere2_red_indicies[i]],
+            points[1, sphere2_red_indicies[i]],
+            "r.",
+        )
     plt.show()
 
 
