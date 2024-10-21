@@ -32,6 +32,19 @@ def polygons_generate():
     return (geometry.Polygon(vertices1), geometry.Polygon(vertices2))
 
 
+def calc_w_p_eff(theta_eval):
+    """
+    Calculate the end effector position given the joint angles
+    """
+    w_p_eff = np.array(
+        [
+            [5 * np.cos(np.sum(theta_eval)) + 5 * np.cos(theta_eval[0, 0])],
+            [5 * np.sin(np.sum(theta_eval)) + 5 * np.sin(theta_eval[0, 0])],
+        ]
+    )
+    return w_p_eff
+
+
 class TwoLink:
     """This class was introduced in a previous homework."""
 
@@ -167,12 +180,7 @@ class TwoLinkPotential:
         of the joint angles = _1\\ _2.
         """
         total = pot.Total(self.world, self.potential)
-        w_p_eff = np.array(
-            [
-                [5 * np.cos(np.sum(theta_eval)) + 5 * np.cos(theta_eval[0, 0])],
-                [5 * np.sin(np.sum(theta_eval)) + 5 * np.sin(theta_eval[0, 0])],
-            ]
-        )
+        w_p_eff = calc_w_p_eff(theta_eval)
         u_eval_theta = total.eval(w_p_eff)
         return u_eval_theta
 
@@ -181,7 +189,12 @@ class TwoLinkPotential:
         Compute the gradient of the potential U pulled back through the kinematic map of the
         two-link manipulator, i.e., grad U(  Wp_ eff(  )).
         """
-
+        two_link = TwoLink()
+        total = pot.Total(self.world, self.potential)
+        jacobian = two_link.jacobian_matrix(theta_eval)
+        w_p_eff = calc_w_p_eff(theta_eval)
+        grad_u_eval = total.grad(w_p_eff)
+        grad_u_eval_theta = np.matmul(grad_u_eval, jacobian)
         return grad_u_eval_theta
 
     def run_plot(self, epsilon, nb_steps):
