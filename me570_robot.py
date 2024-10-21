@@ -170,8 +170,8 @@ class TwoLinkPotential:
         total = pot.Total(self.world, self.potential)
         w_p_eff = np.array(
             [
-                [5 * np.cos(np.sum(theta_eval) + 5 * np.cos(theta_eval[0, 0]))],
-                [5 * np.sin(np.sum(theta_eval) + 5 * np.sin(theta_eval[1, 0]))],
+                5 * np.cos(np.sum(theta_eval) + 5 * np.cos(theta_eval[0, 0])),
+                5 * np.sin(np.sum(theta_eval) + 5 * np.sin(theta_eval[1, 0])),
             ]
         )
         print(w_p_eff)
