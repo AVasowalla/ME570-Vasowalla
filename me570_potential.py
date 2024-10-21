@@ -173,10 +173,10 @@ class Total:
         """
         alpha = self.potential["repulsive_weight"]
         attractive = Attractive(self.potential)
-        grad_u_rep = np.zeros((1, len(self.world.world)))
+        grad_u_rep = np.zeros((2, len(self.world.world)))
         for i, sphere in enumerate(self.world.world):
             repulsive_sphere = RepulsiveSphere(sphere)
-            grad_u_rep[i] = repulsive_sphere.grad(x_eval)
+            grad_u_rep[:, [i]] = repulsive_sphere.grad(x_eval)
         grad_u_attr = attractive.grad(x_eval)
         grad_u_eval = grad_u_attr + alpha * sum(grad_u_rep)
         return grad_u_eval
@@ -187,11 +187,14 @@ class Planner:
     A class implementing a generic potential planner and plot the results.
     """
 
-    def __init__(self):
+    def __init__(self, function, control, epsilon, nb_steps):
         """
         Save the arguments to internal attributes
         """
-        pass  # Substitute with your code
+        self.function = function
+        self.control = control
+        self.epsilon = epsilon
+        self.nb_steps = nb_steps
 
     def run(self, x_start):
         """
