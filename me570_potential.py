@@ -94,7 +94,6 @@ class RepulsiveSphere:
             grad_u_rep = (
                 -(distance**-1 - distance_influence**-1) * distance**-2 * distance_grad
             )
-            grad_u_rep = grad_u_rep.item()
         else:
             grad_u_rep = math.nan
         return grad_u_rep

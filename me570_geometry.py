@@ -454,7 +454,7 @@ class Grid:
 
     def plot_threshold(self, f_handle, threshold=10):
         """
-        The function evaluates the function  f_handle on points placed on the grid.
+        The function evaluates the function f_handle on points placed on the grid.
         """
 
         def f_handle_clip(val):
@@ -704,6 +704,6 @@ def clip(val, threshold):
 
 
 if __name__ == "__main__":
-    torus = Torus()
-    torus.phi_test()
+    xx_ticks = np.linspace(-11, 11, 51)
+    grid = Grid(xx_ticks, xx_ticks)
     plt.show()
