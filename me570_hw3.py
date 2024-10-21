@@ -1,3 +1,7 @@
+"""
+Test file to test functions and generate figures
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 

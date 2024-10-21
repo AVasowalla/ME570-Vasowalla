@@ -405,6 +405,14 @@ def line_linspace(a_line, b_line, t_min, t_max, nb_points):
     return theta_points
 
 
+def distance_between_points(point1, point2):
+    """
+    Calculates the distance between two points
+    """
+
+    return ((point1[0, 0]) - point2[0, 0]) ** 2 + ((point1[0, 1]) - point2[0, 1]) ** 2
+
+
 class Grid:
     """
     A function to store the coordinates of points on a 2-D grid and evaluate arbitrary
@@ -594,7 +602,9 @@ class Torus:
 
 
 class Sphere:
-    """Class for plotting and computing distances to spheres (circles, in 2-D)."""
+    """
+    Class for plotting and computing distances to spheres (circles, in 2-D).
+    """
 
     def __init__(self, center, radius, distance_influence):
         """
@@ -606,7 +616,7 @@ class Sphere:
 
     def plot(self, color):
         """
-            This function draws the sphere (i.e., a circle) of the given radius, and the specified color,
+        This function draws the sphere (i.e., a circle) of the given radius, and the specified color,
         and then draws another circle in gray with radius equal to the distance of influence.
         """
         # Get current axes
@@ -638,7 +648,11 @@ class Sphere:
         Computes the signed distance between points and the sphere, while taking
         into account whether the sphere is hollow or filled in.
         """
-        pass  # Substitute with your code
+        d_points_sphere = np.zeros(1, points.shape[1])
+        for i in range(points.shape[1]):
+            d_points_sphere[i] = (
+                distance_between_points(points[:, i], self.center) - abs(self.radius)
+            ) * np.sign(self.radius)
         return d_points_sphere
 
     def distance_grad(self, points):
