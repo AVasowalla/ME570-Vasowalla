@@ -2,6 +2,7 @@
 Classes to define potential and potential planner for the sphere world
 """
 
+import math
 import numpy as np
 from matplotlib import pyplot as plt
 from scipy import io as scio
@@ -19,8 +20,8 @@ class SphereWorld:
          -  world: a  nb_spheres list of  Sphere objects defining all the spherical obstacles in the
         sphere world.
          -  x_start, a [2 x nb_start] array of initial starting locations (one for each column).
-         -  x_goal, a [2 x nb_goal] vector containing the coordinates of different goal locations (one
-        for each column).
+         -  x_goal, a [2 x nb_goal] vector containing the coordinates of different goal locations
+         (one for each column).
         """
         data = scio.loadmat("sphereworld.mat")
 
@@ -63,9 +64,9 @@ class RepulsiveSphere:
         self.sphere = sphere
 
     def eval(self, x_eval):
-        """s
-            Evaluate the repulsive potential from  sphere at the location x= x_eval. The function returns
-        the repulsive potential as given by      (  eq:repulsive  ).
+        """
+        Evaluate the repulsive potential from  sphere at the location x= x_eval. The function
+        returns the repulsive potential as given by      (  eq:repulsive  ).
         """
         distance = self.sphere.distance(x_eval)
 
@@ -83,7 +84,19 @@ class RepulsiveSphere:
         """
         Compute the gradient of U_ rep for a single sphere, as given by (eq:repulsive-gradient).
         """
-        pass  # Substitute with your code
+        distance = self.sphere.distance(x_eval)
+        distance_grad = self.sphere.distance_grad(x_eval)
+
+        distance_influence = self.sphere.distance_influence
+        if distance > distance_influence:
+            grad_u_rep = 0
+        elif distance_influence > distance > 0:
+            grad_u_rep = (
+                -(distance**-1 - distance_influence**-1) * distance**-2 * distance_grad
+            )
+            grad_u_rep = grad_u_rep.item()
+        else:
+            grad_u_rep = math.nan
         return grad_u_rep
 
 
