@@ -161,7 +161,7 @@ class Total:
         u_rep = np.zeros((1, len(self.world.world)))
         for i, sphere in enumerate(self.world.world):
             repulsive_sphere = RepulsiveSphere(sphere)
-            u_rep[i] = repulsive_sphere.eval(x_eval)
+            u_rep[0, i] = repulsive_sphere.eval(x_eval)
         u_attr = attractive.eval(x_eval)
         u_eval = u_attr + alpha * sum(u_rep)
         return u_eval
@@ -210,12 +210,12 @@ class Planner:
         for i in range(1, self.nb_steps):
             if np.linalg.norm(self.control(x_path[:, [i - 1]])) < 5e-3:
                 x_path[:, [i]] = np.array([[math.nan], [math.nan]])
-                u_path[i] = math.nan
+                u_path[0, i] = math.nan
                 continue
             x_path[:, [i]] = x_path[:, [i - 1]] + self.epsilon * self.control(
                 x_path[:, [i - 1]]
             )
-            u_path[i] = self.function(x_path[:, [i - 1]])
+            u_path[0, i] = self.function(x_path[:, [i - 1]])
 
         return x_path, u_path
 
