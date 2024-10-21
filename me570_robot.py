@@ -168,6 +168,12 @@ class TwoLinkPotential:
         of the joint angles = _1\\ _2.
         """
         total = pot.Total(self.world, self.potential)
+        w_p_eff = np.array(
+            [
+                [5 * np.cos(np.sum(theta_eval) + 5 * np.cos(theta_eval[0, 0]))],
+                [5 * np.sin(np.sum(theta_eval) + 5 * np.sin(theta_eval[1, 0]))],
+            ]
+        )
         u_eval_theta = total.eval(w_p_eff)
         return u_eval_theta
 
@@ -176,7 +182,7 @@ class TwoLinkPotential:
         Compute the gradient of the potential U pulled back through the kinematic map of the
         two-link manipulator, i.e., grad U(  Wp_ eff(  )).
         """
-        pass  # Substitute with your code
+
         return grad_u_eval_theta
 
     def run_plot(self, epsilon, nb_steps):
