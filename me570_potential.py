@@ -95,7 +95,7 @@ class RepulsiveSphere:
                 -(distance**-1 - distance_influence**-1) * distance**-2 * distance_grad
             )
         else:
-            grad_u_rep = math.nan
+            grad_u_rep = np.array([[math.nan], [math.nan]])
         return grad_u_rep
 
 
