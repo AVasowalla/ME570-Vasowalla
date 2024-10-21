@@ -410,7 +410,7 @@ def distance_between_points(point1, point2):
     Calculates the distance between two points
     """
 
-    return ((point1[0, 0]) - point2[0, 0]) ** 2 + ((point1[0, 1]) - point2[0, 1]) ** 2
+    return ((point1[0]) - point2[0]) ** 2 + ((point1[1]) - point2[1]) ** 2
 
 
 class Grid:
@@ -616,8 +616,8 @@ class Sphere:
 
     def plot(self, color):
         """
-        This function draws the sphere (i.e., a circle) of the given radius, and the specified color,
-        and then draws another circle in gray with radius equal to the distance of influence.
+        This function draws the sphere (i.e., a circle) of the given radius, and the specified
+        color, and then draws another circle in gray with radius equal to the distance of influence.
         """
         # Get current axes
         ax = plt.gca()
