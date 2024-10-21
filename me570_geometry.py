@@ -470,7 +470,7 @@ class Grid:
             fig = plt.gcf()
             axis = fig.add_subplot(111, projection="3d")
 
-            axis.plot_surface(xx_mesh, yy_mesh, f_eval.transpose(), cmap=cm.gnuplot2)
+            axis.plot_surface(xx_mesh, yy_mesh, f_eval.transpose(), cmap='gnuplot2')
             axis.set_zlim(0, threshold)
         elif f_dim == 2:
             # vector field
