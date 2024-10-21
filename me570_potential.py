@@ -110,7 +110,7 @@ class Attractive:
 
     def eval(self, x_eval):
         """
-            Evaluate the attractive potential  U_ attr at a point  xEval with respect to a goal location
+        Evaluate the attractive potential  U_ attr at a point  xEval with respect to a goal location
         potential.xGoal given by the formula: If  potential.shape is equal to  'conic', use p=1. If
         potential.shape is equal to  'quadratic', use p=2.
         """
@@ -129,7 +129,15 @@ class Attractive:
         is given by the formula If  potential['shape'] is equal to 'conic', use p=1; if it is
         equal to 'quadratic', use p=2.
         """
-        pass  # Substitute with your code
+        x_goal = self.potential["x_goal"]
+        shape = self.potential["shape"]
+        if shape == "conic":
+            expo = 1
+        else:
+            expo = 2
+        grad_u_attr = (
+            expo * (np.linalg.norm(x_eval - x_goal) ** (expo - 2)) * (x_eval - x_goal)
+        )
         return grad_u_attr
 
 
@@ -219,6 +227,8 @@ if __name__ == "__main__":
     repulsive_sphere1 = RepulsiveSphere(sphere_world.world[0])
     repulsive_sphere2 = RepulsiveSphere(sphere_world.world[1])
     grid.plot_threshold(repulsive_sphere1.grad)
+    sphere_world.world[0].plot("blue")
     plt.show()
     grid.plot_threshold(repulsive_sphere2.grad)
+    sphere_world.world[1].plot("blue")
     plt.show()
