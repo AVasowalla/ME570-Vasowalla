@@ -470,7 +470,7 @@ class Grid:
             fig = plt.gcf()
             axis = fig.add_subplot(111, projection="3d")
 
-            axis.plot_surface(xx_mesh, yy_mesh, f_eval.transpose(), cmap='gnuplot2')
+            axis.plot_surface(xx_mesh, yy_mesh, f_eval.transpose(), cmap="gnuplot2")
             axis.set_zlim(0, threshold)
         elif f_dim == 2:
             # vector field
@@ -642,6 +642,16 @@ class Sphere:
             )
         )
 
+        ax.set_xlim(
+            -(2 * abs(self.radius) + self.distance_influence) + center[0],
+            (2 * abs(self.radius) + self.distance_influence) + center[0],
+        )
+        ax.set_ylim(
+            -(2 * abs(self.radius) + self.distance_influence) + center[1],
+            (2 * abs(self.radius) + self.distance_influence) + center[1],
+        )
+        ax.set_aspect("equal")
+
     def distance(self, points):
         """
         Computes the signed distance between points and the sphere, while taking
@@ -649,7 +659,7 @@ class Sphere:
         """
         d_points_sphere = np.zeros((1, points.shape[1]))
         for i in range(points.shape[1]):
-            d_points_sphere[i] = (
+            d_points_sphere[0, i] = (
                 distance_between_points(points[:, i], self.center) - abs(self.radius)
             ) * np.sign(self.radius)
         return d_points_sphere
@@ -668,8 +678,8 @@ class Sphere:
                 continue
             grad_d_points_sphere[:, [i]] = np.array(
                 [
-                    ((points[0, i] - self.center[0]) / dist)  * np.sign(self.radius),
-                    ((points[1, i] - self.center[1]) / dist)  * np.sign(self.radius),
+                    ((points[0, i] - self.center[0]) / dist) * np.sign(self.radius),
+                    ((points[1, i] - self.center[1]) / dist) * np.sign(self.radius),
                 ]
             )
         return grad_d_points_sphere

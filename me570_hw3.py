@@ -18,7 +18,37 @@ def sphere_test_collision():
     but flipping the sign of the radius  r of the sphere. For each sampled
     point, plot also the result of the output  pointsSphere.
     """
-    pass  # Substitute with your code
+    radius = np.random.uniform(0.1, 5)
+    center = np.random.uniform(-5, 5, (2, 1))
+    influence = np.random.uniform(0, 1)
+    nb_points = 100
+
+    sphere1 = me570_geometry.Sphere(center, radius, influence)
+    sphere2 = me570_geometry.Sphere(center, -1 * radius, influence)
+
+    points = center = np.random.uniform(-10, 10, (2, nb_points))
+
+    sphere1.plot("blue")
+    sphere1_distances = sphere1.distance(points)
+    sphere1_green_indicies = np.argwhere(sphere1_distances > 0)
+    sphere1_red_indicies = np.argwhere(sphere1_distances <= 0)
+    for i in range(sphere1_green_indicies.shape[0]):
+        plt.plot(
+            points[0, sphere1_green_indicies[i]],
+            points[1, sphere1_green_indicies[i]],
+            "green",
+        )
+    for i in range(sphere1_red_indicies.shape[0]):
+        plt.plot(
+            points[0, sphere1_red_indicies[i]],
+            points[1, sphere1_red_indicies[i]],
+            "red",
+        )
+    plt.show()
+    sphere2.plot("blue")
+    sphere2_distances = sphere2.distance(points)
+
+    plt.show()
 
 
 def clfcbf_control_test_singlesphere():
@@ -63,3 +93,7 @@ def clfcbf_run_plot_test():
     repulsive_weight and  epsilon that makes the planner work reliably.
     """
     pass  # Substitute with your code
+
+
+if __name__ == "__main__":
+    sphere_test_collision()
