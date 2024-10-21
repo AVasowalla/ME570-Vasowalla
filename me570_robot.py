@@ -158,7 +158,6 @@ class TwoLinkPotential:
         """
         self.world = world
         self.potential = potential
-        self.attractive = pot.Attractive(potential)
 
     def eval(self, theta_eval):
         """
@@ -174,10 +173,7 @@ class TwoLinkPotential:
                 [5 * np.sin(np.sum(theta_eval) + 5 * np.sin(theta_eval[1, 0]))],
             ]
         )
-        print(w_p_eff)
         u_eval_theta = total.eval(w_p_eff)
-        print(u_eval_theta)
-        print()
         return u_eval_theta
 
     def grad(self, theta_eval):

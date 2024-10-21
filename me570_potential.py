@@ -158,11 +158,11 @@ class Total:
         """
         alpha = self.potential["repulsive_weight"]
         attractive = Attractive(self.potential)
+        u_attr = attractive.eval(x_eval)
         u_rep = np.zeros((1, len(self.world.world)))
         for i, sphere in enumerate(self.world.world):
             repulsive_sphere = RepulsiveSphere(sphere)
             u_rep[0, i] = repulsive_sphere.eval(x_eval)
-        u_attr = attractive.eval(x_eval)
         u_eval = u_attr + alpha * np.sum(u_rep)
         return u_eval
 
