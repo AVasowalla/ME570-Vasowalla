@@ -122,15 +122,27 @@ class TwoLink:
 
     def jacobian_matrix(self, theta):
         """
-            Compute the matrix representation of the Jacobian of the position of the end effector with
+        Compute the matrix representation of the Jacobian of the position of the end effector with
         respect to the joint angles as derived in Question~ q:jacobian-matrix.
         """
-        pass  # Substitute with your code
+        j_theta = np.array(
+            [
+                [
+                    -5 * np.sin(sum(theta)) - 5 * np.sin(theta[0]),
+                    -5 * np.sin(sum(theta)),
+                ],
+                [
+                    5 * np.cos(sum(theta)) + 5 * np.cos(theta[0]),
+                    5 * np.cos(sum(theta)),
+                ],
+            ]
+        )
         return j_theta
 
     def animate(self, theta):
         """
-        Draw the two-link manipulator for each column in theta with a small pause between each drawing operation
+        Draw the two-link manipulator for each column in theta with a small pause between each
+        drawing operation
         """
         theta_steps = theta.shape[1]
         for i_theta in range(0, theta_steps, 15):
@@ -144,15 +156,19 @@ class TwoLinkPotential:
         """
         Save the arguments to internal attributes
         """
-        pass  # Substitute with your code
+        self.world = world
+        self.potential = potential
+        self.attractive = pot.Attractive(potential)
 
     def eval(self, theta_eval):
         """
         Compute the potential U pulled back through the kinematic map of the two-link manipulator,
         i.e., U(Wp_eff(theta)), where U is defined as in Question~q:total-potential, and
-        Wp_ eff(theta) is the position of the end effector in the world frame as a function of the joint angles   = _1\\ _2.
+        Wp_ eff(theta) is the position of the end effector in the world frame as a function
+        of the joint angles = _1\\ _2.
         """
-        pass  # Substitute with your code
+        total = pot.Total(self.world, self.potential)
+        u_eval_theta = total.eval(w_p_eff)
         return u_eval_theta
 
     def grad(self, theta_eval):
@@ -165,16 +181,17 @@ class TwoLinkPotential:
 
     def run_plot(self, epsilon, nb_steps):
         """
-            This function performs the same steps as Planner.run_plot in
-            Question~q:potentialPlannerTest, except for the following:
+        This function performs the same steps as Planner.run_plot in
+        Question~q:potentialPlannerTest, except for the following:
          - In step  it:grad-handle:  planner_parameters['U'] should be set to  @twolink_total, and
         planner_parameters['control'] to the negative of  @twolink_totalGrad.
-         - In step  it:grad-handle: Use the contents of the variable  thetaStart instead of  xStart to
-        initialize the planner, and use only the second goal  x_goal[:,1].
-         - In step  it:plot-plan: Use Twolink.plotAnimate to plot a decimated version of the results of
-        the planner. Note that the output  xPath from Potential.planner will really contain a sequence
-        of join angles, rather than a sequence of 2-D points. Plot only every 5th or 10th column of
-        xPath (e.g., use  xPath(:,1:5:end)). To avoid clutter, plot a different figure for each start.
+         - In step  it:grad-handle: Use the contents of the variable thetaStart instead of
+        xStart to initialize the planner, and use only the second goal  x_goal[:,1].
+         - In step  it:plot-plan: Use Twolink.plotAnimate to plot a decimated version of the
+        results of the planner. Note that the output  xPath from Potential.planner will really
+        contain a sequence of join angles, rather than a sequence of 2-D points. Plot only every
+        5th or 10th column of xPath (e.g., use  xPath(:,1:5:end)). To avoid clutter, plot a
+        different figure for each start.
         """
         sphere_world = pot.SphereWorld()
 
@@ -198,9 +215,3 @@ class TwoLinkPotential:
             sphere_world.plot()
             two_link.animate(theta_path)
             axes[1].plot(u_path.T)
-
-
-if __name__ == "__main__":
-    two_link = TwoLink()
-    two_link.plot(np.array([[np.pi / 4], [np.pi / 2]]), "blue")
-    plt.show()
