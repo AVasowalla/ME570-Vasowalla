@@ -207,6 +207,7 @@ class Planner:
         x_path = np.zeros((2, self.nb_steps))
         u_path = np.zeros((1, self.nb_steps))
         x_path[:, [0]] = x_start
+        u_path[0, 0] = self.function(x_path[:, [0]])
         for i in range(1, self.nb_steps):
             if np.linalg.norm(self.control(x_path[:, [i - 1]])) < 5e-3:
                 x_path[:, [i]] = np.array([[math.nan], [math.nan]])
@@ -215,7 +216,7 @@ class Planner:
             x_path[:, [i]] = x_path[:, [i - 1]] + self.epsilon * self.control(
                 x_path[:, [i - 1]]
             )
-            u_path[0, i] = self.function(x_path[:, [i - 1]])
+            u_path[0, i] = self.function(x_path[:, [i]])
 
         return x_path, u_path
 
