@@ -160,7 +160,8 @@ class Total:
         attractive = Attractive(self.potential)
         u_rep = np.zeros((1, len(self.world.world)))
         for i, sphere in enumerate(self.world.world):
-            u_rep[i] = sphere.eval(x_eval)
+            repulsive_sphere = RepulsiveSphere(sphere)
+            u_rep[i] = repulsive_sphere.eval(x_eval)
         u_attr = attractive.eval(x_eval)
         u_eval = u_attr + alpha * sum(u_rep)
         return u_eval
@@ -174,7 +175,8 @@ class Total:
         attractive = Attractive(self.potential)
         grad_u_rep = np.zeros((1, len(self.world.world)))
         for i, sphere in enumerate(self.world.world):
-            grad_u_rep[i] = sphere.grad(x_eval)
+            repulsive_sphere = RepulsiveSphere(sphere)
+            grad_u_rep[i] = repulsive_sphere.grad(x_eval)
         grad_u_attr = attractive.grad(x_eval)
         grad_u_eval = grad_u_attr + alpha * sum(grad_u_rep)
         return grad_u_eval
