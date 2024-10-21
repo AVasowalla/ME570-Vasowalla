@@ -89,7 +89,7 @@ class RepulsiveSphere:
 
         distance_influence = self.sphere.distance_influence
         if distance > distance_influence:
-            grad_u_rep = 0
+            grad_u_rep = np.array([[0], [0]])
         elif distance_influence > distance > 0:
             grad_u_rep = (
                 -(distance**-1 - distance_influence**-1) * distance**-2 * distance_grad
