@@ -163,7 +163,7 @@ class Total:
             repulsive_sphere = RepulsiveSphere(sphere)
             u_rep[0, i] = repulsive_sphere.eval(x_eval)
         u_attr = attractive.eval(x_eval)
-        u_eval = u_attr + alpha * sum(u_rep)
+        u_eval = u_attr + alpha * np.sum(u_rep)
         return u_eval
 
     def grad(self, x_eval):
