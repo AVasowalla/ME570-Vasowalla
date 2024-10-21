@@ -215,7 +215,7 @@ class Planner:
             x_path[:, [i]] = x_path[:, [i - 1]] + self.epsilon * self.control(
                 x_path[:, [i - 1]]
             )
-            u_path[i] = function(x_path[:, [i - 1]])
+            u_path[i] = self.function(x_path[:, [i - 1]])
 
         return x_path, u_path
 
