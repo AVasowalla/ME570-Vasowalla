@@ -8,6 +8,7 @@ from scipy import linalg
 
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib import cm
 
 
 class Polygon:
@@ -445,6 +446,52 @@ class Grid:
         """
         return np.meshgrid(self.xx_grid, self.yy_grid)
 
+    def plot_threshold(self, f_handle, threshold=10):
+        """
+        The function evaluates the function  f_handle on points placed on the grid.
+        """
+
+        def f_handle_clip(val):
+            return clip(f_handle(val), threshold)
+
+        f_eval = self.eval(f_handle_clip)
+
+        [xx_mesh, yy_mesh] = self.mesh()
+        f_dim = numel(f_handle_clip(np.zeros((2, 1))))
+        if f_dim == 1:
+            # scalar field
+            fig = plt.gcf()
+            axis = fig.add_subplot(111, projection="3d")
+
+            axis.plot_surface(xx_mesh, yy_mesh, f_eval.transpose(), cmap=cm.gnuplot2)
+            axis.set_zlim(0, threshold)
+        elif f_dim == 2:
+            # vector field
+
+            # grid.eval gives the result transposed with respect to
+            # what meshgrid expects
+            f_eval = f_eval.transpose((1, 0, 2))
+            # vector field
+            plt.quiver(
+                xx_mesh,
+                yy_mesh,
+                f_eval[:, :, 0],
+                f_eval[:, :, 1],
+                angles="xy",
+                scale_units="xy",
+                scale=1,
+            )
+            axis = plt.gca()
+        else:
+            raise NotImplementedError(
+                "Field plotting for dimension greater than two not implemented"
+            )
+
+        axis.set_xlim(-15, 15)
+        axis.set_ylim(-15, 15)
+        plt.xlabel("x")
+        plt.ylabel("y")
+
 
 class Torus:
     """
@@ -544,6 +591,82 @@ class Torus:
             for idx in range(nb_points):
                 ring[:, [idx]] = self.phi(theta[:, [idx]])
             axis.plot(ring[0, :], ring[1, :], ring[2, :])
+
+
+class Sphere:
+    """Class for plotting and computing distances to spheres (circles, in 2-D)."""
+
+    def __init__(self, center, radius, distance_influence):
+        """
+        Save the parameters describing the sphere as internal attributes.
+        """
+        self.center = center
+        self.radius = radius
+        self.distance_influence = distance_influence
+
+    def plot(self, color):
+        """
+            This function draws the sphere (i.e., a circle) of the given radius, and the specified color,
+        and then draws another circle in gray with radius equal to the distance of influence.
+        """
+        # Get current axes
+        ax = plt.gca()
+
+        # Add circle as a patch
+        if self.radius > 0:
+            # Circle is filled in
+            kwargs = {"facecolor": (0.3, 0.3, 0.3)}
+            radius_influence = self.radius + self.distance_influence
+        else:
+            # Circle is hollow
+            kwargs = {"fill": False}
+            radius_influence = -self.radius - self.distance_influence
+
+        center = (self.center[0, 0], self.center[1, 0])
+        ax.add_patch(
+            plt.Circle(center, radius=abs(self.radius), edgecolor=color, **kwargs)
+        )
+
+        ax.add_patch(
+            plt.Circle(
+                center, radius=radius_influence, edgecolor=(0.7, 0.7, 0.7), fill=False
+            )
+        )
+
+    def distance(self, points):
+        """
+        Computes the signed distance between points and the sphere, while taking
+        into account whether the sphere is hollow or filled in.
+        """
+        pass  # Substitute with your code
+        return d_points_sphere
+
+    def distance_grad(self, points):
+        """
+        Computes the gradient of the signed distance between points and the
+        sphere, consistently with the definition of Sphere.distance.
+        """
+        pass  # Substitute with your code
+        return grad_d_points_sphere
+
+
+def clip(val, threshold):
+    """
+    If val is a scalar, threshold its value; if it is a vector, normalized it
+    """
+    if isinstance(val, np.ndarray):
+        val_norm = np.linalg.norm(val)
+        if val_norm > threshold:
+            val = val * threshold / val_norm
+    elif isinstance(val, numbers.Number):
+        if np.isnan(val):
+            val = threshold
+        else:
+            val = min(val, threshold)
+    else:
+        raise ValueError("Numeric format not recognized")
+
+    return val
 
 
 if __name__ == "__main__":

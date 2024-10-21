@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import me570_geometry as geometry
+import me570_potential as pot
 
 
 def polygons_add_x_reflection(vertices):
@@ -118,6 +119,85 @@ class TwoLink:
 
             vertex_effector_dot[:, [i]] = np.matmul(jacobian, theta_dot[:, [i]])
         return vertex_effector_dot
+
+    def jacobian_matrix(self, theta):
+        """
+            Compute the matrix representation of the Jacobian of the position of the end effector with
+        respect to the joint angles as derived in Question~ q:jacobian-matrix.
+        """
+        pass  # Substitute with your code
+        return j_theta
+
+    def animate(self, theta):
+        """
+        Draw the two-link manipulator for each column in theta with a small pause between each drawing operation
+        """
+        theta_steps = theta.shape[1]
+        for i_theta in range(0, theta_steps, 15):
+            self.plot(theta[:, [i_theta]], "k")
+
+
+class TwoLinkPotential:
+    """Combines attractive and repulsive potentials"""
+
+    def __init__(self, world, potential):
+        """
+        Save the arguments to internal attributes
+        """
+        pass  # Substitute with your code
+
+    def eval(self, theta_eval):
+        """
+        Compute the potential U pulled back through the kinematic map of the two-link manipulator,
+        i.e., U(Wp_eff(theta)), where U is defined as in Question~q:total-potential, and
+        Wp_ eff(theta) is the position of the end effector in the world frame as a function of the joint angles   = _1\\ _2.
+        """
+        pass  # Substitute with your code
+        return u_eval_theta
+
+    def grad(self, theta_eval):
+        """
+        Compute the gradient of the potential U pulled back through the kinematic map of the
+        two-link manipulator, i.e., grad U(  Wp_ eff(  )).
+        """
+        pass  # Substitute with your code
+        return grad_u_eval_theta
+
+    def run_plot(self, epsilon, nb_steps):
+        """
+            This function performs the same steps as Planner.run_plot in
+            Question~q:potentialPlannerTest, except for the following:
+         - In step  it:grad-handle:  planner_parameters['U'] should be set to  @twolink_total, and
+        planner_parameters['control'] to the negative of  @twolink_totalGrad.
+         - In step  it:grad-handle: Use the contents of the variable  thetaStart instead of  xStart to
+        initialize the planner, and use only the second goal  x_goal[:,1].
+         - In step  it:plot-plan: Use Twolink.plotAnimate to plot a decimated version of the results of
+        the planner. Note that the output  xPath from Potential.planner will really contain a sequence
+        of join angles, rather than a sequence of 2-D points. Plot only every 5th or 10th column of
+        xPath (e.g., use  xPath(:,1:5:end)). To avoid clutter, plot a different figure for each start.
+        """
+        sphere_world = pot.SphereWorld()
+
+        nb_starts = sphere_world.theta_start.shape[1]
+
+        planner = pot.Planner(
+            function=self.eval, control=self.grad, epsilon=epsilon, nb_steps=nb_steps
+        )
+
+        two_link = TwoLink()
+
+        for start in range(0, nb_starts):
+            # Run the planner
+            theta_start = sphere_world.theta_start[:, [start]]
+            theta_path, u_path = planner.run(theta_start)
+
+            # Plots
+            _, axes = plt.subplots(ncols=2)
+            axes[0].set_aspect("equal", adjustable="box")
+            plt.sca(axes[0])
+            sphere_world.plot()
+            two_link.animate(theta_path)
+            axes[1].plot(u_path.T)
 
 
 if __name__ == "__main__":
