@@ -156,7 +156,7 @@ class Total:
         Compute the function U=U_attr+a*iU_rep,i, where a is given by the variable
         potential.repulsiveWeight
         """
-        alpha = self.potential["repulsiveWeight"]
+        alpha = self.potential["repulsive_weight"]
         attractive = Attractive(self.potential)
         u_rep = np.zeros((1, len(self.world.world)))
         for i, sphere in enumerate(self.world.world):
@@ -170,7 +170,7 @@ class Total:
         Compute the gradient of the total potential,  U=U_ attr+a*U_rep,i, where a is given by
         the variable  potential.repulsiveWeight
         """
-        alpha = self.potential["repulsiveWeight"]
+        alpha = self.potential["repulsive_weight"]
         attractive = Attractive(self.potential)
         grad_u_rep = np.zeros((1, len(self.world.world)))
         for i, sphere in enumerate(self.world.world):
