@@ -409,10 +409,7 @@ def distance_between_points(point1, point2):
     """
     Calculates the distance between two points
     """
-    print(point1)
-    print(point2)
-    print(((point1[0]) - point2[0]) ** 2 + ((point1[1]) - point2[1]) ** 2)
-    return ((point1[0]) - point2[0]) ** 2 + ((point1[1]) - point2[1]) ** 2
+    return (((point1[0]) - point2[0]) ** 2 + ((point1[1]) - point2[1]) ** 2) ** 0.5
 
 
 class Grid:
