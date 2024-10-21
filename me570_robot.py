@@ -174,6 +174,7 @@ class TwoLinkPotential:
                 [5 * np.sin(np.sum(theta_eval) + 5 * np.sin(theta_eval[1, 0]))],
             ]
         )
+        print(w_p_eff)
         u_eval_theta = total.eval(w_p_eff)
         return u_eval_theta
 
