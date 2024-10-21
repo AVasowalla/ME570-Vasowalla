@@ -179,8 +179,8 @@ class Total:
             grad_u_rep[:, [i]] = repulsive_sphere.grad(x_eval)
         grad_u_attr = attractive.grad(x_eval)
         print(grad_u_rep)
-        print(sum(grad_u_attr))
-        grad_u_eval = grad_u_attr + alpha * sum(grad_u_rep)
+        print(grad_u_rep.sum(axis=1))
+        grad_u_eval = grad_u_attr + alpha * grad_u_rep.sum(axis=1)
         return grad_u_eval
 
 
