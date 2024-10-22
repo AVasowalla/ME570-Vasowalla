@@ -161,7 +161,6 @@ def planner_run_plot_test():
 
     for weight in repulsive_weight:
         for step_size in epsilon:
-            # nb_steps = int(3600 * step_size / 1e-1)
             nb_steps = 5000
             title = "Repulsive Weight = %.3f, Epsilon = %.0E, Number of Steps = %d}" % (
                 weight,
@@ -195,6 +194,31 @@ def planner_run_plot_test():
                         world.x_goal[1, [i]] + zoom_width,
                     )
                     ax2.semilogy(range(nb_steps), u_path[0, :], "-", color=colors[j])
+
+    repulsive_weight = [0.1, 0.055, 0.01, 0.3]
+    shapes = ["quadratic", "conic"]
+    xx_ticks = np.linspace(-11, 11, 26)
+    grid = me570_geometry.Grid(xx_ticks, xx_ticks)
+
+    for weight in repulsive_weight:
+        for shape in shapes:
+            title = "Repulsive Weight = %.3f, Shape = %s, " % (
+                weight,
+                shape,
+            )
+            potential = {
+                "x_goal": world.x_goal[:, [0]],
+                "repulsive_weight": weight,
+                "shape": shape,
+            }
+            total = me570_potential.Total(world, potential)
+            plt.figure()
+            grid.plot_threshold(total.eval)
+            plt.title(title + "U")
+            plt.figure()
+            grid.plot_threshold(total.grad)
+            world.plot()
+            plt.title(title + "Gradient")
 
 
 def clfcbf_run_plot_test():
