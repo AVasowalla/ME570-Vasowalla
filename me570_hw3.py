@@ -119,7 +119,6 @@ def planner_run_plot_test():
     def negative_grad(x_eval):
         return -total.grad(x_eval)
 
-    """
     for weight in repulsive_weight:
         for step_size in epsilon:
             nb_steps = int(3600 * step_size / 1e-3)
@@ -156,16 +155,14 @@ def planner_run_plot_test():
                     )
                     ax2.semilogy(range(nb_steps), u_path[0, :], "-", color=colors[j])
 
-    """
-
-    repulsive_weight = [0.05]
-    epsilon = [1e-4]
+    repulsive_weight = [0.3, 0.01]
+    epsilon = [1e-2, 1e-3]
     shape = "conic"
 
     for weight in repulsive_weight:
         for step_size in epsilon:
             # nb_steps = int(3600 * step_size / 1e-1)
-            nb_steps = 1000000
+            nb_steps = 5000
             title = "Repulsive Weight = %.3f, Epsilon = %.0E, Number of Steps = %d}" % (
                 weight,
                 step_size,
@@ -210,8 +207,8 @@ def clfcbf_run_plot_test():
 
 
 if __name__ == "__main__":
-    # plt.figure()
-    # plt.figure()
-    # sphere_test_collision()
+    plt.figure()
+    plt.figure()
+    sphere_test_collision()
     planner_run_plot_test()
     plt.show()
