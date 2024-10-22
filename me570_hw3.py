@@ -224,7 +224,42 @@ def clfcbf_run_plot_test():
     CLF-CBF framework, and show the results for one combination of
     repulsive_weight and  epsilon that makes the planner work reliably.
     """
-    pass  # Substitute with your code
+    world = me570_potential.SphereWorld()
+    repulsive_weight = 0.1
+    epsilon = 1e-3
+    shape = "conic"
+    zoom_width = 0.1
+    nb_steps = 100
+    colors = plt.colormaps["jet"](np.linspace(0, 1, world.x_start.shape[1]))
+
+    def negative_grad(x_eval):
+        return -total.grad(x_eval)
+    title = "Repulsive Weight = %.3f, Epsilon = %.0E, Number of Steps = %d}" % (
+        weight,
+        step_size,
+        nb_steps,
+    )
+    for i in range(world.x_goal.shape[1]):
+        fig, (ax1, ax2, ax3) = plt.subplots(1, 3)
+        fig.suptitle(title)
+        world.plot(axes=ax1)
+        world.plot(axes=ax3)
+        potential = {"x_goal": world.x_goal[:, [i]], "repulsive_weight": weight, "shape": shape}
+        clfcbf_control = me570_potential.Clfcbf_Control(world, potential)
+        planner = me570_potential.Planner(total.eval, negative_grad, step_size, nb_steps)
+        for j in range(world.x_start.shape[1]):
+            x_path, u_path = planner.run(world.x_start[:, [j]])
+            ax1.plot(x_path[0, :], x_path[1, :], "-", color=colors[j])
+            ax3.plot(x_path[0, :], x_path[1, :], "-", color=colors[j])
+            ax3.set_xlim(
+                world.x_goal[0, [i]] - zoom_width,
+                world.x_goal[0, [i]] + zoom_width,
+            )
+            ax3.set_ylim(
+                world.x_goal[1, [i]] - zoom_width,
+                world.x_goal[1, [i]] + zoom_width,
+            )
+            ax2.semilogy(range(nb_steps), u_path[0, :], "-", color=colors[j])
 
 
 if __name__ == "__main__":
