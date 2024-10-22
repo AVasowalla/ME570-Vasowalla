@@ -40,7 +40,7 @@ def sphere_test_collision():
             ),
         )
     )
-
+    plt.figure()
     sphere1.plot("blue")
     sphere1_distances = sphere1.distance(points)
     sphere1_green_indicies = np.flatnonzero(sphere1_distances > 0)
@@ -57,7 +57,8 @@ def sphere_test_collision():
             points[1, sphere1_red_indicies[i]],
             "r.",
         )
-    plt.show()
+
+    plt.figure()
     sphere2.plot("blue")
     sphere2_distances = sphere2.distance(points)
     sphere2_green_indicies = np.flatnonzero(sphere2_distances > 0)
@@ -74,7 +75,6 @@ def sphere_test_collision():
             points[1, sphere2_red_indicies[i]],
             "r.",
         )
-    plt.show()
 
 
 def clfcbf_control_test_singlesphere():
@@ -109,7 +109,95 @@ def planner_run_plot_test():
     attribute  function set to  Total.eval, and the attribute  control set
     to the negative of  Total.grad.
     """
-    pass  # Substitute with your code
+    world = me570_potential.SphereWorld()
+    repulsive_weight = [0.1, 0.055, 0.01]
+    epsilon = [1e-3, 2e-3, 3e-3]
+    shape = "quadratic"
+    zoom_width = 0.1
+    colors = plt.colormaps["jet"](np.linspace(0, 1, world.x_start.shape[1]))
+
+    def negative_grad(x_eval):
+        return -total.grad(x_eval)
+
+    """
+    for weight in repulsive_weight:
+        for step_size in epsilon:
+            nb_steps = int(3600 * step_size / 1e-3)
+            title = "Repulsive Weight = %.3f, Epsilon = %.0E, Number of Steps = %d}" % (
+                weight,
+                step_size,
+                nb_steps,
+            )
+            for i in range(world.x_goal.shape[1]):
+                fig, (ax1, ax2, ax3) = plt.subplots(1, 3)
+                fig.suptitle(title)
+                world.plot(axes=ax1)
+                world.plot(axes=ax3)
+                for j in range(world.x_start.shape[1]):
+                    potential = {
+                        "x_goal": world.x_goal[:, [i]],
+                        "repulsive_weight": weight,
+                        "shape": shape,
+                    }
+                    total = me570_potential.Total(world, potential)
+                    planner = me570_potential.Planner(
+                        total.eval, negative_grad, step_size, nb_steps
+                    )
+                    x_path, u_path = planner.run(world.x_start[:, [j]])
+                    ax1.plot(x_path[0, :], x_path[1, :], "-", color=colors[j])
+                    ax3.plot(x_path[0, :], x_path[1, :], "-", color=colors[j])
+                    ax3.set_xlim(
+                        world.x_goal[0, [i]] - zoom_width,
+                        world.x_goal[0, [i]] + zoom_width,
+                    )
+                    ax3.set_ylim(
+                        world.x_goal[1, [i]] - zoom_width,
+                        world.x_goal[1, [i]] + zoom_width,
+                    )
+                    ax2.semilogy(range(nb_steps), u_path[0, :], "-", color=colors[j])
+
+    """
+
+    repulsive_weight = [0.05]
+    epsilon = [1e-4]
+    shape = "conic"
+
+    for weight in repulsive_weight:
+        for step_size in epsilon:
+            # nb_steps = int(3600 * step_size / 1e-1)
+            nb_steps = 1000000
+            title = "Repulsive Weight = %.3f, Epsilon = %.0E, Number of Steps = %d}" % (
+                weight,
+                step_size,
+                nb_steps,
+            )
+            for i in range(world.x_goal.shape[1]):
+                fig, (ax1, ax2, ax3) = plt.subplots(1, 3)
+                fig.suptitle(title)
+                world.plot(axes=ax1)
+                world.plot(axes=ax3)
+                for j in range(world.x_start.shape[1]):
+                    potential = {
+                        "x_goal": world.x_goal[:, [i]],
+                        "repulsive_weight": weight,
+                        "shape": shape,
+                    }
+                    total = me570_potential.Total(world, potential)
+                    planner = me570_potential.Planner(
+                        total.eval, negative_grad, step_size, nb_steps
+                    )
+                    x_path, u_path = planner.run(world.x_start[:, [j]])
+                    ax1.plot(x_path[0, :], x_path[1, :], "-", color=colors[j])
+                    ax3.plot(x_path[0, :], x_path[1, :], "-", color=colors[j])
+                    ax3.set_xlim(
+                        world.x_goal[0, [i]] - zoom_width,
+                        world.x_goal[0, [i]] + zoom_width,
+                    )
+                    ax3.set_ylim(
+                        world.x_goal[1, [i]] - zoom_width,
+                        world.x_goal[1, [i]] + zoom_width,
+                    )
+                    ax2.semilogy(range(nb_steps), u_path[0, :], "-", color=colors[j])
 
 
 def clfcbf_run_plot_test():
@@ -122,4 +210,8 @@ def clfcbf_run_plot_test():
 
 
 if __name__ == "__main__":
-    sphere_test_collision()
+    # plt.figure()
+    # plt.figure()
+    # sphere_test_collision()
+    planner_run_plot_test()
+    plt.show()

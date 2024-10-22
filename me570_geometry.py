@@ -612,13 +612,14 @@ class Sphere:
         self.radius = radius
         self.distance_influence = distance_influence
 
-    def plot(self, color):
+    def plot(self, color, ax=None):
         """
         This function draws the sphere (i.e., a circle) of the given radius, and the specified
         color, and then draws another circle in gray with radius equal to the distance of influence.
         """
         # Get current axes
-        ax = plt.gca()
+        if ax is None:
+            ax = plt.gca()
 
         # Add circle as a patch
         if self.radius > 0:
@@ -704,6 +705,4 @@ def clip(val, threshold):
 
 
 if __name__ == "__main__":
-    xx_ticks = np.linspace(-11, 11, 51)
-    grid = Grid(xx_ticks, xx_ticks)
-    plt.show()
+    print("nothing")

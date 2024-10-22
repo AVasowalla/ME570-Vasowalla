@@ -45,13 +45,13 @@ class SphereWorld:
             axes = plt.gca()
 
         for sphere in self.world:
-            sphere.plot("r")
+            sphere.plot("r", axes)
 
-        plt.scatter(self.x_goal[0, :], self.x_goal[1, :], c="g", marker="*")
+        axes.scatter(self.x_goal[0, :], self.x_goal[1, :], c="g", marker="*")
 
-        plt.xlim([-11, 11])
-        plt.ylim([-11, 11])
-        plt.axis("equal")
+        axes.set_xlim([-11, 11])
+        axes.set_ylim([-11, 11])
+        axes.axis("equal")
 
 
 class RepulsiveSphere:
@@ -261,4 +261,6 @@ if __name__ == "__main__":
     plt.show()
     grid.plot_threshold(repulsive_sphere2.grad)
     sphere_world.world[1].plot("blue")
+    plt.show()
+    sphere_world.plot()
     plt.show()
