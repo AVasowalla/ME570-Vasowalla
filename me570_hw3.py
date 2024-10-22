@@ -110,8 +110,8 @@ def planner_run_plot_test():
     to the negative of  Total.grad.
     """
     world = me570_potential.SphereWorld()
-    repulsive_weight = [0.1, 0.055, 0.01]
-    epsilon = [1e-3, 2e-3, 3e-3]
+    repulsive_weight = [0.1, 0.01]
+    epsilon = [1e-3, 3e-3]
     shape = "quadratic"
     zoom_width = 0.1
     colors = plt.colormaps["jet"](np.linspace(0, 1, world.x_start.shape[1]))
@@ -202,10 +202,7 @@ def planner_run_plot_test():
 
     for weight in repulsive_weight:
         for shape in shapes:
-            title = "Repulsive Weight = %.3f, Shape = %s, " % (
-                weight,
-                shape,
-            )
+            title = f"Repulsive Weight ={weight .3f}, Shape ={shape .s}, "
             potential = {
                 "x_goal": world.x_goal[:, [0]],
                 "repulsive_weight": weight,
