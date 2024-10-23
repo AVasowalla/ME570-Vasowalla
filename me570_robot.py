@@ -158,7 +158,7 @@ class TwoLink:
         drawing operation
         """
         theta_steps = theta.shape[1]
-        for i_theta in range(0, theta_steps, 25):
+        for i_theta in range(0, theta_steps):
             if i_theta == 0:
                 self.plot(theta[:, [i_theta]], "g")
             else:
@@ -198,7 +198,7 @@ class TwoLinkPotential:
         w_p_eff = calc_w_p_eff(theta_eval)
         grad_u_eval = total.grad(w_p_eff)
         grad_u_eval_theta = np.matmul(jacobian.transpose(), grad_u_eval)
-        return -grad_u_eval_theta
+        return grad_u_eval_theta
 
     def run_plot(self, epsilon, nb_steps):
         """
@@ -218,8 +218,14 @@ class TwoLinkPotential:
 
         nb_starts = sphere_world.theta_start.shape[1]
 
+        def negative_grad(x_eval):
+            return -self.grad(x_eval)
+
         planner = pot.Planner(
-            function=self.eval, control=self.grad, epsilon=epsilon, nb_steps=nb_steps
+            function=self.eval,
+            control=negative_grad,
+            epsilon=epsilon,
+            nb_steps=nb_steps,
         )
 
         two_link = TwoLink()

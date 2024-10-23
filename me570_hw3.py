@@ -271,9 +271,9 @@ if __name__ == "__main__":
     world = me570_potential.SphereWorld()
     potential = {
         "x_goal": world.x_goal[:, [1]],
-        "repulsive_weight": 1,
+        "repulsive_weight": 0.05,
         "shape": "quadratic",
     }
     two_link = me570_robot.TwoLinkPotential(world, potential)
-    two_link.run_plot(1e-3, 1000)
+    two_link.run_plot(3e-3, 20)
     plt.show()
