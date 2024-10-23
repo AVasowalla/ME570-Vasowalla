@@ -275,5 +275,5 @@ if __name__ == "__main__":
         "shape": "quadratic",
     }
     two_link = me570_robot.TwoLinkPotential(world, potential)
-    two_link.run_plot(1e-7, 10000)
+    two_link.run_plot(1e-3, 1000)
     plt.show()

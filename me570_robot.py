@@ -159,7 +159,10 @@ class TwoLink:
         """
         theta_steps = theta.shape[1]
         for i_theta in range(0, theta_steps, 25):
-            self.plot(theta[:, [i_theta]], "k")
+            if i_theta == 0:
+                self.plot(theta[:, [i_theta]], "g")
+            else:
+                self.plot(theta[:, [i_theta]], "k")
 
 
 class TwoLinkPotential:
