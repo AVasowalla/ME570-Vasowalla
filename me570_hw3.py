@@ -7,6 +7,7 @@ import numpy as np
 
 import me570_geometry
 import me570_potential
+import me570_robot
 
 
 def sphere_test_collision():
@@ -267,8 +268,12 @@ def clfcbf_run_plot_test():
 
 
 if __name__ == "__main__":
-    plt.figure()
-    plt.figure()
-    sphere_test_collision()
-    planner_run_plot_test()
+    world = me570_potential.SphereWorld()
+    potential = {
+        "x_goal": world.x_goal[:, [1]],
+        "repulsive_weight": 1,
+        "shape": "quadratic",
+    }
+    two_link = me570_robot.TwoLinkPotential(world, potential)
+    two_link.run_plot(1e-7, 10000)
     plt.show()
