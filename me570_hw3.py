@@ -111,17 +111,16 @@ def planner_run_plot_test():
     to the negative of  Total.grad.
     """
     world = me570_potential.SphereWorld()
-    repulsive_weight = [0.1, 0.01]
-    epsilon = [1e-3, 3e-3]
-    shape = "quadratic"
+    parameters = [0.1, 0.01, 0.3, 1e-2, 1e-3, 3e-3]
+    shapes = ["quadratic", "conic"]
     zoom_width = 0.1
     colors = plt.colormaps["jet"](np.linspace(0, 1, world.x_start.shape[1]))
 
     def negative_grad(x_eval):
         return -total.grad(x_eval)
 
-    for weight in repulsive_weight:
-        for step_size in epsilon:
+    for weight in parameters[:1]:
+        for step_size in parameters[4:]:
             nb_steps = int(3600 * step_size / 1e-3)
             title = "Repulsive Weight = %.3f, Epsilon = %.0E, Number of Steps = %d}" % (
                 weight,
@@ -137,7 +136,7 @@ def planner_run_plot_test():
                     potential = {
                         "x_goal": world.x_goal[:, [i]],
                         "repulsive_weight": weight,
-                        "shape": shape,
+                        "shape": shapes[0],
                     }
                     total = me570_potential.Total(world, potential)
                     planner = me570_potential.Planner(
@@ -156,12 +155,8 @@ def planner_run_plot_test():
                     )
                     ax2.semilogy(range(nb_steps), u_path[0, :], "-", color=colors[j])
 
-    repulsive_weight = [0.3, 0.01]
-    epsilon = [1e-2, 1e-3]
-    shape = "conic"
-
-    for weight in repulsive_weight:
-        for step_size in epsilon:
+    for weight in parameters[1:2]:
+        for step_size in parameters[3:4]:
             nb_steps = 5000
             title = "Repulsive Weight = %.3f, Epsilon = %.0E, Number of Steps = %d}" % (
                 weight,
@@ -177,7 +172,7 @@ def planner_run_plot_test():
                     potential = {
                         "x_goal": world.x_goal[:, [i]],
                         "repulsive_weight": weight,
-                        "shape": shape,
+                        "shape": shapes[1],
                     }
                     total = me570_potential.Total(world, potential)
                     planner = me570_potential.Planner(
@@ -196,12 +191,10 @@ def planner_run_plot_test():
                     )
                     ax2.semilogy(range(nb_steps), u_path[0, :], "-", color=colors[j])
 
-    repulsive_weight = [0.1, 0.055, 0.01, 0.3]
-    shapes = ["quadratic", "conic"]
     xx_ticks = np.linspace(-11, 11, 26)
     grid = me570_geometry.Grid(xx_ticks, xx_ticks)
 
-    for weight in repulsive_weight:
+    for weight in parameters[:2]:
         for shape in shapes:
             title = f"Repulsive Weight ={weight:.3f}, Shape ={shape}, "
             potential = {
