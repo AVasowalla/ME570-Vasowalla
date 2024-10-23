@@ -80,7 +80,8 @@ def sphere_test_collision():
 
 def clfcbf_control_test_singlesphere():
     """
-    Use the provided function Grid.plot_threshold ( ) to visualize the CLF-CBF control field for a single filled-in sphere
+    Use the provided function Grid.plot_threshold ( ) to visualize the CLF-CBF
+    control field for a single filled-in sphere
     """
     # A single sphere whose edge intersects the origin
     world = me570_potential.SphereWorld()
