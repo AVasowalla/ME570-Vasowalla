@@ -136,6 +136,8 @@ class Attractive:
             expo = 1
         else:
             expo = 2
+        if np.linalg.norm(x_eval - x_goal) == 0:
+            return np.zeros((2, 1))
         grad_u_attr = (
             expo * (np.linalg.norm(x_eval - x_goal) ** (expo - 2)) * (x_eval - x_goal)
         )
