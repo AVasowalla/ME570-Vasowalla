@@ -247,7 +247,7 @@ class Clfcbf_Control:
         """
         Compute u^* according to      (  eq:clfcbf-qp  ).
         """
-        for sphere in self.world:
+        for sphere in self.world.world:
             a_barrier_sphere = np.transpose(-sphere.distance_grad(x_eval))
             a_barrier = np.vstack((a_barrier, a_barrier_sphere))
             b_barrier_sphere = self.potential["repulsive_weight"] * sphere.distance(
