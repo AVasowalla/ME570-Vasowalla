@@ -256,10 +256,7 @@ class Clfcbf_Control:
                 x_eval
             )
             b_barrier[[i], :] = b_barrier_sphere
-            if (
-                a_barrier_sphere == np.zeros(a_barrier_sphere.shape)
-                or b_barrier_sphere == 0
-            ):
+            if np.all(a_barrier_sphere == 0) or b_barrier_sphere == 0:
                 return np.zeros((2, 1))
         u_ref = self.attractive.grad(self.world.x_goal)
         u_opt = me570_qp.qp_supervisor(a_barrier, b_barrier, u_ref)
