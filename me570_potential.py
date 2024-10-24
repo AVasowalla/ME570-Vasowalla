@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt
 from scipy import io as scio
 
 import me570_geometry
+import me570_qp
 
 
 class SphereWorld:
@@ -246,7 +247,20 @@ class Clfcbf_Control:
         """
         Compute u^* according to      (  eq:clfcbf-qp  ).
         """
-        pass  # Substitute with your code
+        for sphere in self.world:
+            a_barrier_sphere = np.transpose(-sphere.distance_grad(x_eval))
+            a_barrier = np.vstack((a_barrier, a_barrier_sphere))
+            b_barrier_sphere = self.potential["repulsive_weight"] * sphere.distance(
+                x_eval
+            )
+            if (
+                a_barrier_sphere == np.zeros(a_barrier_sphere.shape)
+                or b_barrier_sphere == 0
+            ):
+                return np.zeros((2, 1))
+            b_barrier = np.vstack((b_barrier, b_barrier_sphere))
+        u_ref = self.attractive.grad(self.world.x_goal)
+        u_opt = me570_qp.qp_supervisor(a_barrier, b_barrier, u_ref)
         return u_opt
 
 
