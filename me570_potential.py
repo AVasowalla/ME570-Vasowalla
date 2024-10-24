@@ -251,13 +251,17 @@ class Clfcbf_Control:
         b_barrier = np.zeros((len(self.world.world), 1))
         for i, sphere in enumerate(self.world.world):
             a_barrier_sphere = np.transpose(-sphere.distance_grad(x_eval))
+            print(a_barrier_sphere)
             a_barrier[[i], :] = a_barrier_sphere
             b_barrier_sphere = self.potential["repulsive_weight"] * sphere.distance(
                 x_eval
             )
+            print(b_barrier_sphere)
             b_barrier[[i], :] = b_barrier_sphere
             if np.all(a_barrier_sphere == 0) or b_barrier_sphere == 0:
                 return np.zeros((2, 1))
+        print(a_barrier)
+        print(b_barrier)
         u_ref = self.attractive.grad(self.world.x_goal)
         u_opt = me570_qp.qp_supervisor(a_barrier, b_barrier, u_ref)
         return u_opt
