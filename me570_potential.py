@@ -260,9 +260,7 @@ class Clfcbf_Control:
             b_barrier[[i], :] = b_barrier_sphere
             if np.all(a_barrier_sphere == 0) or b_barrier_sphere == 0:
                 return np.zeros((2, 1))
-        u_ref = -np.linalg.norm(x_eval - self.world.x_goal[:, [0]]) * (
-            x_eval - self.world.x_goal[:, [0]]
-        )
+        u_ref = -self.attractive.grad(x_eval)
         print(u_ref)
         u_opt = me570_qp.qp_supervisor(a_barrier, b_barrier, u_ref)
         return u_opt
