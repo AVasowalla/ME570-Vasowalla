@@ -255,7 +255,7 @@ class Clfcbf_Control:
         for i, sphere in enumerate(self.world.world):
             a_barrier_sphere = np.transpose(-sphere.distance_grad(x_eval))
             a_barrier[[i], :] = a_barrier_sphere
-            b_barrier_sphere = self.potential["repulsive_weight"] * sphere.distance(
+            b_barrier_sphere = -self.potential["repulsive_weight"] * sphere.distance(
                 x_eval
             )
             b_barrier[[i], :] = b_barrier_sphere
