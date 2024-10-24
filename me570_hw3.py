@@ -7,7 +7,6 @@ import numpy as np
 
 import me570_geometry
 import me570_potential
-import me570_robot
 
 
 def sphere_test_collision():
@@ -220,11 +219,11 @@ def clfcbf_run_plot_test():
     repulsive_weight and  epsilon that makes the planner work reliably.
     """
     world = me570_potential.SphereWorld()
-    repulsive_weight = 0.1
-    epsilon = 1e-3
+    repulsive_weight = 0.01
+    epsilon = 5e-2
     shape = "conic"
     zoom_width = 0.1
-    nb_steps = 20
+    nb_steps = 6750
     colors = plt.colormaps["jet"](np.linspace(0, 1, world.x_start.shape[1]))
     title = "Repulsive Weight = %.3f, Epsilon = %.0E, Number of Steps = %d}" % (
         repulsive_weight,
@@ -262,5 +261,17 @@ def clfcbf_run_plot_test():
 
 
 if __name__ == "__main__":
-    clfcbf_run_plot_test()
+    # clfcbf_run_plot_test()
+
+    xx_ticks = np.linspace(-10, 10, 51)
+    grid = me570_geometry.Grid(xx_ticks, xx_ticks)
+    sphere_world = me570_potential.SphereWorld()
+    potential = {
+        "x_goal": sphere_world.x_goal[:, [0]],
+        "repulsive_weight": 0.01,
+        "shape": "conic",
+    }
+    clfcbf_control = me570_potential.Clfcbf_Control(sphere_world, potential)
+    grid.plot_threshold(clfcbf_control.control)
+    sphere_world.plot()
     plt.show()
