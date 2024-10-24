@@ -262,5 +262,5 @@ def clfcbf_run_plot_test():
 
 
 if __name__ == "__main__":
-    clfcbf_control_test_singlesphere()
+    clfcbf_run_plot_test()
     plt.show()

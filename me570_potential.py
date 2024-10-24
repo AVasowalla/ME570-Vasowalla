@@ -28,6 +28,7 @@ class SphereWorld:
 
         self.world = []
         for sphere_args in np.reshape(data["world"], (-1,)):
+            sphere_args[0] = sphere_args[0].astype(float)
             sphere_args[1] = sphere_args[1].item()
             sphere_args[2] = sphere_args[2].item()
             self.world.append(me570_geometry.Sphere(*sphere_args))
@@ -261,7 +262,6 @@ class Clfcbf_Control:
             if np.all(a_barrier_sphere == 0) or b_barrier_sphere == 0:
                 return np.zeros((2, 1))
         u_ref = -self.attractive.grad(x_eval)
-        print(u_ref)
         u_opt = me570_qp.qp_supervisor(a_barrier, b_barrier, u_ref)
         return u_opt
 
