@@ -260,18 +260,18 @@ def clfcbf_run_plot_test():
             ax2.semilogy(range(nb_steps), u_path[0, :], "-", color=colors[j])
 
 
-if __name__ == "__main__":
-    # clfcbf_run_plot_test()
-
-    xx_ticks = np.linspace(-10, 10, 51)
-    grid = me570_geometry.Grid(xx_ticks, xx_ticks)
-    sphere_world = me570_potential.SphereWorld()
-    potential = {
-        "x_goal": sphere_world.x_goal[:, [0]],
-        "repulsive_weight": 0.01,
-        "shape": "conic",
-    }
-    clfcbf_control = me570_potential.Clfcbf_Control(sphere_world, potential)
-    grid.plot_threshold(clfcbf_control.control)
-    sphere_world.plot()
-    plt.show()
+# if __name__ == "__main__":
+#     # clfcbf_run_plot_test()
+#
+#     xx_ticks = np.linspace(-10, 10, 51)
+#     grid = me570_geometry.Grid(xx_ticks, xx_ticks)
+#     sphere_world = me570_potential.SphereWorld()
+#     potential = {
+#         "x_goal": sphere_world.x_goal[:, [0]],
+#         "repulsive_weight": 0.01,
+#         "shape": "conic",
+#     }
+#     clfcbf_control = me570_potential.Clfcbf_Control(sphere_world, potential)
+#     grid.plot_threshold(clfcbf_control.control)
+#     sphere_world.plot()
+#     plt.show()

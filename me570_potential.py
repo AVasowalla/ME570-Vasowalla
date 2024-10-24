@@ -266,17 +266,17 @@ class Clfcbf_Control:
         return u_opt
 
 
-if __name__ == "__main__":
-    xx_ticks = np.linspace(-11, 11, 51)
-    grid = me570_geometry.Grid(xx_ticks, xx_ticks)
-    sphere_world = SphereWorld()
-    repulsive_sphere1 = RepulsiveSphere(sphere_world.world[0])
-    repulsive_sphere2 = RepulsiveSphere(sphere_world.world[1])
-    grid.plot_threshold(repulsive_sphere1.grad)
-    sphere_world.world[0].plot("blue")
-    plt.show()
-    grid.plot_threshold(repulsive_sphere2.grad)
-    sphere_world.world[1].plot("blue")
-    plt.show()
-    sphere_world.plot()
-    plt.show()
+# if __name__ == "__main__":
+#     xx_ticks = np.linspace(-11, 11, 51)
+#     grid = me570_geometry.Grid(xx_ticks, xx_ticks)
+#     sphere_world = SphereWorld()
+#     repulsive_sphere1 = RepulsiveSphere(sphere_world.world[0])
+#     repulsive_sphere2 = RepulsiveSphere(sphere_world.world[1])
+#     grid.plot_threshold(repulsive_sphere1.grad)
+#     sphere_world.world[0].plot("blue")
+#     plt.show()
+#     grid.plot_threshold(repulsive_sphere2.grad)
+#     sphere_world.world[1].plot("blue")
+#     plt.show()
+#     sphere_world.plot()
+#     plt.show()

@@ -704,5 +704,5 @@ def clip(val, threshold):
     return val
 
 
-if __name__ == "__main__":
-    print("nothing")
+# if __name__ == "__main__":
+#     print("nothing")

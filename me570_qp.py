@@ -75,5 +75,5 @@ def qp_supervisor_test():
         print("\tas expected, raises a ValueError exception")
 
 
-if __name__ == "__main__":
-    qp_supervisor_test()
+# if __name__ == "__main__":
+#     qp_supervisor_test()
