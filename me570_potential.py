@@ -247,8 +247,8 @@ class Clfcbf_Control:
         """
         Compute u^* according to      (  eq:clfcbf-qp  ).
         """
-        a_barrier = np.zeros(len(self.world.world), 2)
-        b_barrier = np.zeros(len(self.world.world), 1)
+        a_barrier = np.zeros((len(self.world.world), 2))
+        b_barrier = np.zeros((len(self.world.world), 1))
         for i, sphere in enumerate(self.world.world):
             a_barrier_sphere = np.transpose(-sphere.distance_grad(x_eval))
             a_barrier[[i], :] = a_barrier_sphere
