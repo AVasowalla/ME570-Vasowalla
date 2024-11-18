@@ -375,7 +375,7 @@ def numel(var):
     Counts the number of entries in a numpy array, or returns 1 for fundamental numerical
     types
     """
-    if isinstance(var, numbers.Number):
+    if isinstance(var, (bool, numbers.Number, np.number, np.bool_)):
         size = int(1)
     elif isinstance(var, np.ndarray):
         size = var.size
@@ -413,7 +413,7 @@ def distance_between_points(point1, point2):
 
 class Grid:
     """
-    A function to store the coordinates of points on a 2-D grid and evaluate arbitrary
+    A class to store the coordinates of points on a 2-D grid and evaluate arbitrary
     functions on those points.
     """
 
@@ -421,8 +421,18 @@ class Grid:
         """
         Stores the input arguments in attributes.
         """
-        self.xx_grid = xx_grid
-        self.yy_grid = yy_grid
+
+        def ensure_1d(val):
+            """
+            Ensure that the array is 1-D
+            """
+            if len(val.shape) > 1:
+                val = np.reshape(val, (-1))
+            return val
+
+        self.xx_grid = ensure_1d(xx_grid)
+        self.yy_grid = ensure_1d(yy_grid)
+        self.fun_evalued = None
 
     def eval(self, fun):
         """
@@ -444,6 +454,7 @@ class Grid:
         if dim_range == [1]:
             fun_eval = np.reshape(fun_eval, dim_domain)
 
+        self.fun_evalued = fun_eval
         return fun_eval
 
     def mesh(self):
