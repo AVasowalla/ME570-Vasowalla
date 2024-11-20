@@ -273,7 +273,7 @@ class Graph:
         idx_expand = [idx for idx in neighbors if idx not in idx_closed]
         return idx_expand
 
-    def expand_element(self, idx_n_best, idx_x, idx_goal, pq_open):
+    def expand_element(self, idx_n_best, idx_x, idx_goal, pq_open, method="astar"):
         """
         This function expands the vertex with index  idx_x (which is a neighbor of the one with
         index  idx_n_best) and returns the updated versions of  graph_vector and  pq_open.
@@ -296,7 +296,12 @@ class Graph:
                 node_n_best["g"] + node_n_best["neighbors_cost"][idx_x_n_best]
             )
             self.graph_vector[idx_x]["h"] = self.heuristic(idx_x, idx_goal)
-            f = self.graph_vector[idx_x]["g"] + self.graph_vector[idx_x]["h"]
+            if method == "bfs":
+                f = self.graph_vector[idx_x]["g"]
+            elif method == "greedy":
+                f = self.graph_vector[idx_x]["h"]
+            elif method == "astar":
+                f = self.graph_vector[idx_x]["g"] + self.graph_vector[idx_x]["h"]
             self.graph_vector[idx_x]["backpointer"] = idx_n_best
 
         return pq_open
@@ -318,7 +323,7 @@ class Graph:
         x_path = np.hstack((self.graph_vector[idx_start]["x"], x_path))
         return x_path
 
-    def search(self, idx_start, idx_goal):
+    def search(self, idx_start, idx_goal, method="astar"):
         """
         Implements the  A^* algorithm, as described by the pseudo-code in Algorithm~ .
         """
@@ -327,12 +332,15 @@ class Graph:
         idx_closed = []
         counter = 0
         max_iter = 20
+        for i in range(len(self.graph_vector)):
+            self.graph_vector[i]["g"] = 0.0
+            self.graph_vector[i]["backpointer"] = None
 
         while pq_open.queue_list and counter < max_iter:
             idx_n, f_n = pq_open.min_extract()
             idx_closed.append(idx_n)
             if (
-                self.graph_vector[idx_goal]["g"] is not None
+                self.graph_vector[idx_goal]["g"] is not 0.0
                 and self.graph_vector[idx_goal]["g"] <= f_n
             ):
                 x_path = self.path(idx_start, idx_goal)
@@ -340,7 +348,7 @@ class Graph:
                 return x_path
             idx_neighbors = self.get_expand_list(idx_n, idx_closed)
             for idx_x in idx_neighbors:
-                pq_open = self.expand_element(idx_n, idx_x, idx_goal, pq_open)
+                pq_open = self.expand_element(idx_n, idx_x, idx_goal, pq_open, method)
 
             counter += 1
         x_path = self.path(idx_start, idx_goal)
