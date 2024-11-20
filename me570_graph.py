@@ -330,7 +330,7 @@ class Graph:
 
         while pq_open.queue_list and counter < max_iter:
             idx_n, f_n = pq_open.min_extract()
-            idx_closed.append([idx_n])
+            idx_closed.append(idx_n)
             if (
                 self.graph_vector[idx_goal]["g"] is not None
                 and self.graph_vector[idx_goal]["g"] <= f_n
