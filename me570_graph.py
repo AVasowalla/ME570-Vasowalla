@@ -368,7 +368,7 @@ class Graph:
         idx_goal = self.nearest_neighbors(x_goal, 1)[0]
         x_path = self.search(idx_start, idx_goal)
         print(x_path[:, 0])
-        print(x_start.T)
+        print(x_start.T[0])
         # if not np.array_equal(x_path[:, 0], x_start):
         #    x_path = np.hstack((x_start, x_path))
         # if not np.array_equal(x_path[:, -1], x_goal):
