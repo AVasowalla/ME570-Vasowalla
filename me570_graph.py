@@ -367,10 +367,10 @@ class Graph:
         idx_start = self.nearest_neighbors(x_start, 1)[0]
         idx_goal = self.nearest_neighbors(x_goal, 1)[0]
         x_path = self.search(idx_start, idx_goal)
-        if not np.array_equal(x_path[:, 0], x_start):
-            x_path = np.hstack((x_start, x_path))
-        if not np.array_equal(x_path[:, -1], x_goal):
-            x_path = np.hstack((x_path, x_goal))
+        # if not np.array_equal(x_path[:, 0], x_start):
+        #    x_path = np.hstack((x_start, x_path))
+        # if not np.array_equal(x_path[:, -1], x_goal):
+        #    x_path = np.hstack((x_path, x_goal))
         return x_path
 
 
@@ -542,7 +542,16 @@ def test_grid2graph():
 
 
 if __name__ == "__main__":
-    sphereworldgraph = SphereWorldGraph(5)
+    plt.figure()
+    sphereworldgraph = SphereWorldGraph(4)
+    sphereworldgraph.sphereworld.plot()
+    sphereworldgraph.plot()
+    plt.figure()
+    sphereworldgraph = SphereWorldGraph(15)
+    sphereworldgraph.sphereworld.plot()
+    sphereworldgraph.plot()
+    plt.figure()
+    sphereworldgraph = SphereWorldGraph(50)
     sphereworldgraph.sphereworld.plot()
     sphereworldgraph.plot()
     plt.show()
