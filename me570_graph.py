@@ -391,7 +391,7 @@ class SphereWorldGraph:
          - Store the resulting  graph object as an internal attribute.
         """
         self.sphereworld = pot.SphereWorld()
-        xx_grid = np.linspace(-10, 10, 3)
+        xx_grid = np.linspace(-10, 10, nb_cells)
         self.grid = me570_geometry.Grid(xx_grid, xx_grid)
         print(self.grid.xx_grid)
         print(self.grid.yy_grid)
@@ -401,7 +401,11 @@ class SphereWorldGraph:
             "shape": "conic",
         }
         total = pot.Total(self.sphereworld, potential)
-        self.grid.eval(total.eval)
+
+        def collision_detection(x):
+            return total.eval(x) > 0
+
+        self.grid.eval(collision_detection)
         self.graph = grid2graph(self.grid)
 
     def plot(self):
@@ -449,6 +453,7 @@ def grid2graph(grid):
 
     # Make sure values in F are logicals
     fun_evalued = np.vectorize(bool)(grid.fun_evalued)
+    print(fun_evalued)
 
     # Get number of columns, rows, and nodes
     nb_xx, nb_yy = fun_evalued.shape
@@ -533,4 +538,8 @@ def test_grid2graph():
     graph.plot()
 
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
+    sphereworldgraph = SphereWorldGraph(5)
+    sphereworldgraph.sphereworld.plot()
+    sphereworldgraph.plot()
+    plt.show()
