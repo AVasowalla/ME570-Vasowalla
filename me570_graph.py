@@ -307,6 +307,8 @@ class Graph:
         sequence of traversed elements.
         """
         x_path = self.graph_vector[idx_goal]["x"]
+        if self.graph_vector[idx_goal]["backpointer"] is None:
+            return x_path
         prev_node = self.graph_vector[self.graph_vector[idx_goal]["backpointer"]]
         while prev_node["backpointer"] is not None:
             current_node = prev_node
