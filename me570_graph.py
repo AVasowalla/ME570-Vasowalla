@@ -279,7 +279,7 @@ class Graph:
         """
         node_n_best = self.graph_vector[idx_n_best]
         idx_x_n_best = node_n_best["neighbors"].index(idx_x)
-        if not any(node[0] == idx_x for node in pq_open):
+        if not any(node[0] == idx_x for node in pq_open.queue_list):
             self.graph_vector[idx_x]["g"] = (
                 node_n_best["g"] + node_n_best["neighbors_cost"][idx_x_n_best]
             )
