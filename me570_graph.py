@@ -9,6 +9,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 import me570_geometry
+import me570_potential as pot
 from me570_queue import PriorityQueue as queue
 
 
@@ -389,7 +390,12 @@ class SphereWorldGraph:
          - Call grid2graph.
          - Store the resulting  graph object as an internal attribute.
         """
-        self.graph = None  # Substitute with your code
+        self.sphereworld = pot.SphereWorld()
+        xx_grid = np.linspace(-10, 10, nb_cells)
+        self.grid = me570_geometry.Grid(xx_grid, xx_grid)
+        total = pot.Total(self.sphereworld, None)
+        grid_collision = self.grid.eval(total.eval)
+        self.graph = grid2graph(grid_collision)
 
     def plot(self):
         """
