@@ -15,7 +15,7 @@ def graph_search_test():
     """
     graph = me570_graph.Graph(me570_graph.graph_test_data_load("graphVectorMedium"))
     path = graph.search(0, 14)
-    graph.plot(flag_heuristic=True, idx_goal=14, node_lists=path)
+    graph.plot(flag_heuristic=True, idx_goal=14)
 
 
 def twolink_search_plot_solution(theta_path):
