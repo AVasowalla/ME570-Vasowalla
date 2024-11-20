@@ -9,6 +9,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 import me570_geometry
+from me570_queue import PriorityQueue as queue
 
 
 def plot_arrows_from_list(arrow_list, scale=1.0, color=(0.0, 0.0, 0.0)):
@@ -279,7 +280,7 @@ class Graph:
         """
         node_n_best = self.graph_vector[idx_n_best]
         idx_x_n_best = node_n_best["neighbors"].index(idx_x)
-        if not any(node[0] == idx_x for node in pq_open.queue_list):
+        if not pq_open.is_member(idx_x):
             self.graph_vector[idx_x]["g"] = (
                 node_n_best["g"] + node_n_best["neighbors_cost"][idx_x_n_best]
             )
@@ -321,7 +322,10 @@ class Graph:
         """
         Implements the  A^* algorithm, as described by the pseudo-code in Algorithm~ .
         """
-        pass  # Substitute with your code
+        pq_open = queue()
+        pq_open.insert(idx_start, 0.0)
+        idx_closed = np.empty((1, 1))
+
         return x_path
 
     def search_start_goal(self, x_start, x_goal):
