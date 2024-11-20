@@ -364,8 +364,8 @@ class Graph:
          - Appends  x_start and  x_goal, respectively, to the beginning and the end of the array
         x_path.
         """
-        idx_start = self.nearest_neighbors(x_start, 1)
-        idx_goal = self.nearest_neighbors(x_goal, 1)
+        idx_start = self.nearest_neighbors(x_start, 1)[0]
+        idx_goal = self.nearest_neighbors(x_goal, 1)[0]
         print(type(x_start))
         print(x_start)
         print(type(idx_start))
