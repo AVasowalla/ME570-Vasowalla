@@ -325,8 +325,10 @@ class Graph:
         pq_open = queue()
         pq_open.insert(idx_start, 0.0)
         idx_closed = []
+        counter = 0
+        max_iter = 100
 
-        while pq_open.queue_list:
+        while pq_open.queue_list and counter < max_iter:
             idx_n, f_n = pq_open.min_extract()
             idx_closed.append([idx_n])
             if (
@@ -338,6 +340,8 @@ class Graph:
             idx_neighbors = self.get_expand_list(idx_n, idx_closed)
             for idx_x in idx_neighbors:
                 self.expand_element(idx_n, idx_x, idx_goal, pq_open)
+
+            counter += 1
 
         return x_path
 
