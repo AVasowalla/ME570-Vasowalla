@@ -364,7 +364,11 @@ class Graph:
          - Appends  x_start and  x_goal, respectively, to the beginning and the end of the array
         x_path.
         """
-        pass  # Substitute with your code
+        idx_start = self.nearest_neighbors(x_start, 1)
+        idx_goal = self.nearest_neighbors(x_goal, 1)
+        x_path = self.search(idx_start, idx_goal)
+        x_path = np.insert(x_path, 0, x_start)
+        x_path = np.append(x_path, x_start)
         return x_path
 
 
@@ -393,8 +397,6 @@ class SphereWorldGraph:
         self.sphereworld = pot.SphereWorld()
         xx_grid = np.linspace(-10, 10, nb_cells)
         self.grid = me570_geometry.Grid(xx_grid, xx_grid)
-        print(self.grid.xx_grid)
-        print(self.grid.yy_grid)
         potential = {
             "x_goal": self.sphereworld.x_goal[:, [0]],
             "repulsive_weight": 0.01,
@@ -453,7 +455,6 @@ def grid2graph(grid):
 
     # Make sure values in F are logicals
     fun_evalued = np.vectorize(bool)(grid.fun_evalued)
-    print(fun_evalued)
 
     # Get number of columns, rows, and nodes
     nb_xx, nb_yy = fun_evalued.shape
