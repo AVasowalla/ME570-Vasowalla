@@ -268,7 +268,7 @@ class Graph:
         Finds the neighbors of element  idx_n_best that are not in  idx_closed (line   in Algorithm~
         ).
         """
-        neighbors = self.graph_vector["neighbors"]
+        neighbors = self.graph_vector[idx_n_best]["neighbors"]
         idx_expand = [idx for idx in neighbors if idx not in idx_closed]
         return idx_expand
 
