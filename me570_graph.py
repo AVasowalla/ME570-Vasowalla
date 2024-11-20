@@ -277,7 +277,27 @@ class Graph:
         This function expands the vertex with index  idx_x (which is a neighbor of the one with
         index  idx_n_best) and returns the updated versions of  graph_vector and  pq_open.
         """
-        pass  # Substitute with your code
+        node_n_best = self.graph_vector[idx_n_best]
+        idx_x_n_best = node_n_best["neighbors"].index(idx_x)
+        if not any(node[0] == idx_x for node in pq_open):
+            self.graph_vector[idx_x]["g"] = (
+                node_n_best["g"] + node_n_best["neighbors_cost"][idx_x_n_best]
+            )
+            self.graph_vector[idx_x]["backpointer"] = idx_n_best
+            self.graph_vector[idx_x]["h"] = self.heuristic(idx_x, idx_goal)
+            f = self.graph_vector[idx_x]["g"] + self.graph_vector[idx_x]["h"]
+            pq_open.insert(idx_x, f)
+        elif (
+            node_n_best["g"] + node_n_best["neighbors_cost"][idx_x_n_best]
+            < self.graph_vector[idx_x]["g"]
+        ):
+            self.graph_vector[idx_x]["g"] = (
+                node_n_best["g"] + node_n_best["neighbors_cost"][idx_x_n_best]
+            )
+            self.graph_vector[idx_x]["h"] = self.heuristic(idx_x, idx_goal)
+            f = self.graph_vector[idx_x]["g"] + self.graph_vector[idx_x]["h"]
+            self.graph_vector[idx_x]["backpointer"] = idx_n_best
+
         return pq_open
 
     def path(self, idx_start, idx_goal):
