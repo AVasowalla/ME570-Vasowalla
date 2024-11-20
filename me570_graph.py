@@ -332,7 +332,7 @@ class Graph:
         pq_open.insert(idx_start, 0.0)
         idx_closed = []
         counter = 0
-        max_iter = 20
+        max_iter = 500
         for i, _ in enumerate(self.graph_vector):
             self.graph_vector[i]["g"] = 0.0
             self.graph_vector[i]["backpointer"] = None
@@ -351,6 +351,8 @@ class Graph:
                 pq_open = self.expand_element(idx_n, idx_x, idx_goal, pq_open, method)
 
             counter += 1
+            if counter == max_iter:
+                print("failed")
         x_path = self.path(idx_start, idx_goal)
         return x_path
 
@@ -423,7 +425,18 @@ class SphereWorldGraph:
         - Load the variables  x_start,  x_goal from the internal attribute  sphereworld.
         homework4_sphereworldPlot
         """
-        pass  # Substitute with your code
+        x_start = self.sphereworld.x_start
+        x_goal = self.sphereworld.x_goal
+
+        for i in range(x_goal.shape[1]):
+            plt.figure()
+            for j in range(x_start.shape[1]):
+                x_path = self.graph.search_start_goal(
+                    x_start[:, j].reshape(2, 1), x_goal[:, i].reshape(2, 1)
+                )
+                self.sphereworld.plot()
+                # self.plot()
+                plt.plot(x_path[0, :], x_path[1, :])
 
 
 def graph_test_data_load(variable_name):
@@ -542,16 +555,10 @@ def test_grid2graph():
 
 
 if __name__ == "__main__":
-    plt.figure()
     sphereworldgraph = SphereWorldGraph(4)
-    sphereworldgraph.sphereworld.plot()
-    sphereworldgraph.plot()
-    plt.figure()
+    sphereworldgraph.run_plot()
     sphereworldgraph = SphereWorldGraph(15)
-    sphereworldgraph.sphereworld.plot()
-    sphereworldgraph.plot()
-    plt.figure()
+    sphereworldgraph.run_plot()
     sphereworldgraph = SphereWorldGraph(50)
-    sphereworldgraph.sphereworld.plot()
-    sphereworldgraph.plot()
+    sphereworldgraph.run_plot()
     plt.show()
