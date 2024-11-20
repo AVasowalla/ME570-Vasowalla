@@ -326,7 +326,7 @@ class Graph:
         pq_open.insert(idx_start, 0.0)
         idx_closed = []
         counter = 0
-        max_iter = 1
+        max_iter = 20000
 
         while pq_open.queue_list and counter < max_iter:
             idx_n, f_n = pq_open.min_extract()
