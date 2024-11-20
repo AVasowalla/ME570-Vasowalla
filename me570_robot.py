@@ -9,6 +9,7 @@ from scipy import io as scio
 
 import me570_geometry as geometry
 import me570_potential as pot
+import me570_graph
 
 
 def polygons_add_x_reflection(vertices):
@@ -44,16 +45,6 @@ def calc_w_p_eff(theta_eval):
         ]
     )
     return w_p_eff
-
-    def load_free_space_grid():
-        """
-        Loads the contents of the file ! twolink_freeSpace_data.mat
-        """
-        test_data = scio.loadmat("twolink_freeSpace_data.mat")
-        test_data = test_data["grid"][0][0]
-        grid = geometry.Grid(test_data[0], test_data[1])
-        grid.fun_evalued = test_data[2]
-        return grid
 
 
 class TwoLink:
@@ -261,6 +252,12 @@ class TwoLinkGraph:
     discretization and  A^*.
     """
 
+    def __init__(self):
+        """
+        initialize the twolink graph
+        """
+        self.graph = self.load_free_space_graph()
+
     def load_free_space_graph(self):
         """
         The function performs the following steps
@@ -268,17 +265,35 @@ class TwoLinkGraph:
          - Calls grid2graph.
          - Stores the resulting  graph object of class  Grid as an internal attribute.
         """
-        pass  # Substitute with your code
+        grid = load_free_space_grid()
+        return me570_graph.grid2graph(grid)
 
     def plot(self):
         """
         Use the method Graph.plot to visualize the contents of the attribute  graph.
         """
-        pass  # Substitute with your code
+        self.graph.plot()
 
     def search_start_goal(self, theta_start, theta_goal):
         """
         Use the method Graph.search to search a path in the graph stored in  graph.
         """
-        pass  # Substitute with your code
+        theta_path = self.graph.search_start_goal(theta_start, theta_goal)
         return theta_path
+
+
+def load_free_space_grid():
+    """
+    Loads the contents of the file ! twolink_freeSpace_data.mat
+    """
+    test_data = scio.loadmat("twolink_freeSpace_data.mat")
+    test_data = test_data["grid"][0][0]
+    grid = geometry.Grid(test_data[0], test_data[1])
+    grid.fun_evalued = test_data[2]
+    return grid
+
+
+if __name__ == "__main__":
+    twolinkgraph = TwoLinkGraph()
+    twolinkgraph.plot()
+    plt.show()

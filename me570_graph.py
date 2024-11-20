@@ -332,7 +332,7 @@ class Graph:
         pq_open.insert(idx_start, 0.0)
         idx_closed = []
         counter = 0
-        max_iter = 500
+        max_iter = 10000
         for i, _ in enumerate(self.graph_vector):
             self.graph_vector[i]["g"] = 0.0
             self.graph_vector[i]["backpointer"] = None

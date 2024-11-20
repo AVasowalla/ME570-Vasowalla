@@ -54,16 +54,24 @@ def twolink_test_path():
     rotates and then the first link rotates (both with constant speeds).
     """
     theta_m = 3 / 4 * np.pi
-    theta_path = np.vstack((np.zeros((1, 75)), np.linspace(0, theta_m, 75)))
+    theta_path = np.vstack((np.zeros((1, 7)), np.linspace(0, theta_m, 7)))
     theta_path = np.hstack(
         (
             theta_path,
-            np.vstack((np.linspace(0, theta_m, 75), theta_m * np.ones((1, 75)))),
+            np.vstack((np.linspace(0, theta_m, 7), theta_m * np.ones((1, 7)))),
         )
     )
     twolink_search_plot_solution(theta_path)
 
 
 if __name__ == "__main__":
-    graph_search_test()
+    twolinkgraph = me570_robot.TwoLinkGraph()
+    theta_start = np.array([[0.76], [0.12]])
+    theta_goal = np.array([[0.76], [6.00]])
+    theta__search_path = twolinkgraph.search_start_goal(theta_start, theta_goal)
+    twolink_search_plot_solution(theta__search_path)
+    theta_start = np.array([[0.76], [0.12]])
+    theta_goal = np.array([[2.72], [5.45]])
+    theta__search_path = twolinkgraph.search_start_goal(theta_start, theta_goal)
+    twolink_search_plot_solution(theta__search_path)
     plt.show()
