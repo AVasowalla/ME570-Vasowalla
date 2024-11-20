@@ -308,10 +308,13 @@ class Graph:
         """
         x_path = self.graph_vector[idx_goal]["x"]
         prev_node = self.graph_vector[self.graph_vector[idx_goal]["backpointer"]]
+        print(x_path)
+        print(self.graph_vector[idx_start]["x"])
         while np.array_equal(x_path[:, 0], self.graph_vector[idx_start]["x"]):
             current_node = prev_node
             prev_node = self.graph_vector[current_node["backpointer"]]
             x_path = np.hstack((current_node["x"], x_path))
+            print(x_path)
         return x_path
 
     def search(self, idx_start, idx_goal):
