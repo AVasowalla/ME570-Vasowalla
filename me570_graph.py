@@ -344,7 +344,6 @@ class Graph:
                 and self.graph_vector[idx_goal]["g"] <= f_n
             ):
                 x_path = self.path(idx_start, idx_goal)
-                print(x_path)
                 return x_path
             idx_neighbors = self.get_expand_list(idx_n, idx_closed)
             for idx_x in idx_neighbors:
@@ -352,7 +351,6 @@ class Graph:
 
             counter += 1
         x_path = self.path(idx_start, idx_goal)
-        print(x_path)
         return x_path
 
     def search_start_goal(self, x_start, x_goal):
