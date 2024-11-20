@@ -399,8 +399,8 @@ class SphereWorldGraph:
             "shape": "conic",
         }
         total = pot.Total(self.sphereworld, potential)
-        grid_collision = self.grid.eval(total.eval)
-        self.graph = grid2graph(grid_collision)
+        self.grid.eval(total.eval)
+        self.graph = grid2graph(self.grid)
 
     def plot(self):
         """
