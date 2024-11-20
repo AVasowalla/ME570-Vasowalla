@@ -312,6 +312,7 @@ class Graph:
             current_node = prev_node
             prev_node = self.graph_vector[current_node["backpointer"]]
             x_path = np.hstack((current_node["x"], x_path))
+        x_path = np.hstack((self.graph_vector[idx_start]["x"], x_path))
         return x_path
 
     def search(self, idx_start, idx_goal):
