@@ -393,7 +393,12 @@ class SphereWorldGraph:
         self.sphereworld = pot.SphereWorld()
         xx_grid = np.linspace(-10, 10, nb_cells)
         self.grid = me570_geometry.Grid(xx_grid, xx_grid)
-        total = pot.Total(self.sphereworld, None)
+        potential = {
+            "x_goal": self.sphereworld.x_goal[:, [0]],
+            "repulsive_weight": 0.01,
+            "shape": "conic",
+        }
+        total = pot.Total(self.sphereworld, potential)
         grid_collision = self.grid.eval(total.eval)
         self.graph = grid2graph(grid_collision)
 
