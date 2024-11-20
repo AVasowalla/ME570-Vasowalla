@@ -367,6 +367,12 @@ class Graph:
         idx_start = self.nearest_neighbors(x_start, 1)
         idx_goal = self.nearest_neighbors(x_goal, 1)
         x_path = self.search(idx_start, idx_goal)
+        print(type(idx_start))
+        print(idx_start)
+        print(type(x_path))
+        print(x_path)
+        print(type(x_start))
+        print(x_start)
         x_path = np.insert(x_path, 0, x_start)
         x_path = np.append(x_path, x_start)
         return x_path
