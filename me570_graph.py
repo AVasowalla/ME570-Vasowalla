@@ -393,6 +393,8 @@ class SphereWorldGraph:
         self.sphereworld = pot.SphereWorld()
         xx_grid = np.linspace(-10, 10, nb_cells)
         self.grid = me570_geometry.Grid(xx_grid, xx_grid)
+        print(self.grid.xx_grid)
+        print(self.grid.yy_grid)
         potential = {
             "x_goal": self.sphereworld.x_goal[:, [0]],
             "repulsive_weight": 0.01,
