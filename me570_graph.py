@@ -391,7 +391,7 @@ class SphereWorldGraph:
          - Store the resulting  graph object as an internal attribute.
         """
         self.sphereworld = pot.SphereWorld()
-        xx_grid = np.linspace(-5, 5, nb_cells)
+        xx_grid = np.linspace(-10, 10, nb_cells)
         self.grid = me570_geometry.Grid(xx_grid, xx_grid)
         potential = {
             "x_goal": self.sphereworld.x_goal[:, [0]],
@@ -531,6 +531,4 @@ def test_grid2graph():
     graph.plot()
 
 
-if __name__ == "__main__":
-    graph_test_data_plot()
-    plt.show()
+# if __name__ == "__main__":
