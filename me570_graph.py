@@ -253,15 +253,13 @@ class Graph:
         Computes the heuristic  h given by the Euclidean distance between the nodes with indexes
         idx_x and  idx_goal.
         """
+
+        idx_x_x = self.graph_vector[idx_x]["x"]
+        idx_goal_x = self.graph_vector[idx_goal]["x"]
+
         h_val = (
-            (
-                (self.graph_vector[idx_x]["x"][0] - self.graph_vector[idx_goal]["x"][0])
-                ** 2
-            )
-            + (
-                (self.graph_vector[idx_x]["x"][1] - self.graph_vector[idx_goal]["x"][1])
-                ** 2
-            )
+            ((idx_x_x[0][0] - idx_goal_x[0][0]) ** 2)
+            + ((idx_x_x[1][0] - idx_goal_x[1][0]) ** 2)
         ) ** 0.5
         return h_val
 
@@ -270,7 +268,8 @@ class Graph:
         Finds the neighbors of element  idx_n_best that are not in  idx_closed (line   in Algorithm~
         ).
         """
-        pass  # Substitute with your code
+        neighbors = self.graph_vector["neighbors"]
+        idx_expand = [idx for idx in neighbors if idx not in idx_closed]
         return idx_expand
 
     def expand_element(self, idx_n_best, idx_x, idx_goal, pq_open):
@@ -462,3 +461,8 @@ def test_grid2graph():
     grid.eval(func)
     graph = grid2graph(grid)
     graph.plot()
+
+
+if __name__ == "__main__":
+    graph_test_data_plot()
+    plt.show()
