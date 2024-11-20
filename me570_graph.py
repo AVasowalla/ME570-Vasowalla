@@ -339,7 +339,7 @@ class Graph:
                 break
             idx_neighbors = self.get_expand_list(idx_n, idx_closed)
             for idx_x in idx_neighbors:
-                self.expand_element(idx_n, idx_x, idx_goal, pq_open)
+                pq_open = self.expand_element(idx_n, idx_x, idx_goal, pq_open)
 
             counter += 1
         x_path = self.path(idx_start, idx_goal)
