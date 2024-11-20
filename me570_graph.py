@@ -342,7 +342,7 @@ class Graph:
                 self.expand_element(idx_n, idx_x, idx_goal, pq_open)
 
             counter += 1
-
+        x_path = self.path(idx_start, idx_goal)
         return x_path
 
     def search_start_goal(self, x_start, x_goal):
