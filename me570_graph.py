@@ -254,8 +254,14 @@ class Graph:
         idx_x and  idx_goal.
         """
         h_val = (
-            ((self.graph_vector[idx_x].x[0] - self.graph_vector[idx_goal].x[0]) ** 2)
-            + ((self.graph_vector[idx_x].x[1] - self.graph_vector[idx_goal].x[1]) ** 2)
+            (
+                (self.graph_vector[idx_x]["x"][0] - self.graph_vector[idx_goal]["x"][0])
+                ** 2
+            )
+            + (
+                (self.graph_vector[idx_x]["x"][1] - self.graph_vector[idx_goal]["x"][1])
+                ** 2
+            )
         ) ** 0.5
         return h_val
 
