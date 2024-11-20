@@ -324,7 +324,20 @@ class Graph:
         """
         pq_open = queue()
         pq_open.insert(idx_start, 0.0)
-        idx_closed = np.empty((1, 1))
+        idx_closed = []
+
+        while pq_open.queue_list:
+            idx_n, f_n = pq_open.min_extract()
+            idx_closed.append([idx_n])
+            if (
+                self.graph_vector[idx_goal]["g"] is not None
+                and self.graph_vector[idx_goal]["g"] <= f_n
+            ):
+                x_path = self.path(idx_start, idx_goal)
+                break
+            idx_neighbors = self.get_expand_list(idx_n, idx_closed)
+            for idx_x in idx_neighbors:
+                self.expand_element(idx_n, idx_x, idx_goal, pq_open)
 
         return x_path
 
