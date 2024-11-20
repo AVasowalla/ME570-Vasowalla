@@ -41,7 +41,7 @@ def plot_text(coord, str_label, color=(1.0, 1.0, 1.0)):
         ha="center",
         va="center",
         fontsize="xx-small",
-        bbox=dict(boxstyle="round", fc=color, ec=None),
+        bbox={"boxstyle": "round", "fc": color, "ec": None},
     )
 
 
