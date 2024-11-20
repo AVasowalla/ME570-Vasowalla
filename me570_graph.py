@@ -308,7 +308,7 @@ class Graph:
         """
         x_path = self.graph_vector[idx_goal]["x"]
         prev_node = self.graph_vector[self.graph_vector[idx_goal]["backpointer"]]
-        while not np.array_equal(x_path[:, 0], self.graph_vector[idx_start]["x"]):
+        while prev_node["backpointer"] is not None:
             current_node = prev_node
             prev_node = self.graph_vector[current_node["backpointer"]]
             x_path = np.hstack((current_node["x"], x_path))
