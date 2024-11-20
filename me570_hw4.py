@@ -15,7 +15,15 @@ def graph_search_test():
     """
     graph = me570_graph.Graph(me570_graph.graph_test_data_load("graphVectorMedium"))
     path = graph.search(0, 14)
-    graph.plot(flag_heuristic=True, idx_goal=14)
+    node_coords = np.vstack([node["x"].flatten() for node in graph.graph_vector]).T
+    path_idx = []
+    for idx in range(len(path[0, :])):
+        path_idx.append(
+            np.where(
+                (node_coords[0] == path[0, idx]) & (node_coords[1] == path[1, idx])
+            )[0][0]
+        )
+    graph.plot(flag_heuristic=True, idx_goal=14, node_lists=path_idx)
 
 
 def twolink_search_plot_solution(theta_path):

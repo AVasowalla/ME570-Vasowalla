@@ -228,7 +228,7 @@ class Graph:
         if node_lists is not None:
             if not isinstance(node_lists[0], list):
                 node_lists = [node_lists]
-            markers = ["d", "o", "s", "*", "h", "^", "8"]
+            markers = ["d-", "o", "s", "*", "h", "^", "8"]
             for i, lst in enumerate(node_lists):
                 x_list = [self.graph_vector[e]["x"] for e in lst]
                 coords = np.hstack(x_list)
@@ -332,7 +332,7 @@ class Graph:
         idx_closed = []
         counter = 0
         max_iter = 20
-        for i in range(len(self.graph_vector)):
+        for i, _ in enumerate(self.graph_vector):
             self.graph_vector[i]["g"] = 0.0
             self.graph_vector[i]["backpointer"] = None
 
@@ -340,7 +340,7 @@ class Graph:
             idx_n, f_n = pq_open.min_extract()
             idx_closed.append(idx_n)
             if (
-                self.graph_vector[idx_goal]["g"] is not 0.0
+                self.graph_vector[idx_goal]["g"] != 0.0
                 and self.graph_vector[idx_goal]["g"] <= f_n
             ):
                 x_path = self.path(idx_start, idx_goal)
