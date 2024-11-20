@@ -11,32 +11,36 @@ from matplotlib import pyplot as plt
 import me570_geometry
 
 
-def plot_arrows_from_list(arrow_list, scale=1.0, color=(0., 0., 0.)):
+def plot_arrows_from_list(arrow_list, scale=1.0, color=(0.0, 0.0, 0.0)):
     """
     Plot arrows from a list of pairs of base points and displacements
     """
     x_edges, v_edges = [np.hstack(x) for x in zip(*arrow_list)]
-    plt.quiver(x_edges[0, :],
-               x_edges[1, :],
-               v_edges[0, :],
-               v_edges[1, :],
-               angles='xy',
-               scale_units='xy',
-               scale=scale,
-               color=color)
+    plt.quiver(
+        x_edges[0, :],
+        x_edges[1, :],
+        v_edges[0, :],
+        v_edges[1, :],
+        angles="xy",
+        scale_units="xy",
+        scale=scale,
+        color=color,
+    )
 
 
-def plot_text(coord, str_label, color=(1., 1., 1.)):
+def plot_text(coord, str_label, color=(1.0, 1.0, 1.0)):
     """
     Wrap plt.text to get a consistent look
     """
-    plt.text(coord[0].item(),
-             coord[1].item(),
-             str_label,
-             ha="center",
-             va="center",
-             fontsize='xx-small',
-             bbox=dict(boxstyle="round", fc=color, ec=None))
+    plt.text(
+        coord[0].item(),
+        coord[1].item(),
+        str_label,
+        ha="center",
+        va="center",
+        fontsize="xx-small",
+        bbox=dict(boxstyle="round", fc=color, ec=None),
+    )
 
 
 class Graph:
@@ -61,32 +65,36 @@ class Graph:
         """
         Get all weights and where to display them
         """
-        x_current = n_current['x']
+        x_current = n_current["x"]
         return [
-            (weight_neighbor,
-             self.graph_vector[idx_neighbor]['x'] * 0.25 + x_current * 0.75)
-            for (weight_neighbor, idx_neighbor
-                 ) in zip(n_current['neighbors_cost'], n_current['neighbors'])
+            (
+                weight_neighbor,
+                self.graph_vector[idx_neighbor]["x"] * 0.25 + x_current * 0.75,
+            )
+            for (weight_neighbor, idx_neighbor) in zip(
+                n_current["neighbors_cost"], n_current["neighbors"]
+            )
         ]
 
     def _neighbor_displacements(self, n_current):
         """
         Get all displacements with respect to the neighbors for a given node
         """
-        x_current = n_current['x']
-        return [(x_current, self.graph_vector[idx_neighbor]['x'] - x_current)
-                for idx_neighbor in n_current['neighbors']]
+        x_current = n_current["x"]
+        return [
+            (x_current, self.graph_vector[idx_neighbor]["x"] - x_current)
+            for idx_neighbor in n_current["neighbors"]
+        ]
 
     def _neighbor_backpointers(self, n_current):
         """
         Get coordinates for backpointer arrows
         """
-        x_current = n_current['x']
-        idx_backpointer = n_current.get('backpointer', None)
+        x_current = n_current["x"]
+        idx_backpointer = n_current.get("backpointer", None)
         if idx_backpointer is not None:
             arrow = [
-                (x_current,
-                 0.5 * (self.graph_vector[idx_backpointer]['x'] - x_current))
+                (x_current, 0.5 * (self.graph_vector[idx_backpointer]["x"] - x_current))
             ]
         else:
             arrow = []
@@ -96,12 +104,15 @@ class Graph:
         """
         Get value and coordinates for backpointer costs
         """
-        x_current = n_current['x']
-        idx_backpointer = n_current.get('backpointer', None)
+        x_current = n_current["x"]
+        idx_backpointer = n_current.get("backpointer", None)
         if idx_backpointer is not None:
-            arrow = [(n_current['g'],
-                      self.graph_vector[idx_backpointer]['x'] * 0.25 +
-                      x_current * 0.75)]
+            arrow = [
+                (
+                    n_current["g"],
+                    self.graph_vector[idx_backpointer]["x"] * 0.25 + x_current * 0.75,
+                )
+            ]
         else:
             arrow = []
         return arrow
@@ -112,20 +123,27 @@ class Graph:
         """
         is_empty = len(self.graph_vector) == 0
         is_all_backpointers_none = all(
-            [x.get('backpointer', None) is None for x in self.graph_vector])
-        return self.graph_vector is not None and not is_empty and not is_all_backpointers_none
+            [x.get("backpointer", None) is None for x in self.graph_vector]
+        )
+        return (
+            self.graph_vector is not None
+            and not is_empty
+            and not is_all_backpointers_none
+        )
 
-    def plot(self,
-             flag_edges=True,
-             flag_labels=False,
-             flag_edge_weights=False,
-             flag_backpointers=True,
-             flag_backpointers_cost=True,
-             flag_heuristic=False,
-             node_lists=None,
-             idx_closed=None,
-             idx_goal=None,
-             idx_best=None):
+    def plot(
+        self,
+        flag_edges=True,
+        flag_labels=False,
+        flag_edge_weights=False,
+        flag_backpointers=True,
+        flag_backpointers_cost=True,
+        flag_heuristic=False,
+        node_lists=None,
+        idx_closed=None,
+        idx_goal=None,
+        idx_best=None,
+    ):
         """
         The function plots the contents of the graph described by the
         graph_vector structure, alongside other related, optional data.
@@ -133,78 +151,85 @@ class Graph:
 
         if flag_edges:
             displacement_list = self._apply_neighbor_function(
-                self._neighbor_displacements)
+                self._neighbor_displacements
+            )
             plot_arrows_from_list(displacement_list, scale=1.05)
 
         if flag_labels:
             for idx, n_current in enumerate(self.graph_vector):
-                x_current = n_current['x']
+                x_current = n_current["x"]
                 plot_text(x_current, str(idx))
 
         if idx_closed is not None:
             for idx in idx_closed:
-                x_current = self.graph_vector[idx]['x']
-                plt.scatter(x_current[0],
-                            x_current[1],
-                            marker='s',
-                            color=(0., 0., 1.))
+                x_current = self.graph_vector[idx]["x"]
+                plt.scatter(
+                    x_current[0], x_current[1], marker="s", color=(0.0, 0.0, 1.0)
+                )
 
         if idx_goal is not None:
-            x_goal = self.graph_vector[idx_goal]['x']
-            plt.plot(x_goal[0, :],
-                     x_goal[1, :],
-                     marker='d',
-                     markersize=10,
-                     color=(.8, .1, .1))
+            x_goal = self.graph_vector[idx_goal]["x"]
+            plt.plot(
+                x_goal[0, :],
+                x_goal[1, :],
+                marker="d",
+                markersize=10,
+                color=(0.8, 0.1, 0.1),
+            )
 
         if idx_best is not None:
-            x_best = self.graph_vector[idx_best]['x']
-            plt.plot(x_best[0, :],
-                     x_best[1, :],
-                     marker='d',
-                     markersize=10,
-                     color=(0., 1., 0.))
+            x_best = self.graph_vector[idx_best]["x"]
+            plt.plot(
+                x_best[0, :],
+                x_best[1, :],
+                marker="d",
+                markersize=10,
+                color=(0.0, 1.0, 0.0),
+            )
 
         if flag_heuristic and idx_goal is not None:
             for idx, n_current in enumerate(self.graph_vector):
-                x_current = n_current['x']
+                x_current = n_current["x"]
                 h_current = self.heuristic(idx, idx_goal)
-                plot_text(x_current, f'h={h_current:.2f}', color=(.8, 1., .8))
+                plot_text(x_current, f"h={h_current:.2f}", color=(0.8, 1.0, 0.8))
                 if flag_heuristic and idx_goal is not None:
-                    idx_backpointer = n_current.get('backpointer', None)
+                    idx_backpointer = n_current.get("backpointer", None)
                     if idx_backpointer is not None:
-                        cost = n_current['g'] + h_current
-                        offset = np.array([[0], [.15]])
-                        plot_text(x_current + offset,
-                                  f'f={cost:.2f}',
-                                  color=(.8, 1., .8))
+                        cost = n_current["g"] + h_current
+                        offset = np.array([[0], [0.15]])
+                        plot_text(
+                            x_current + offset, f"f={cost:.2f}", color=(0.8, 1.0, 0.8)
+                        )
 
         if flag_edge_weights:
             weight_list = self._apply_neighbor_function(
-                self._neighbor_weights_with_positions)
-            for (weight, coord) in weight_list:
-                plot_text(coord, str(weight), color=(.8, .8, 1.))
+                self._neighbor_weights_with_positions
+            )
+            for weight, coord in weight_list:
+                plot_text(coord, str(weight), color=(0.8, 0.8, 1.0))
 
         if flag_backpointers and self.has_backpointers():
             backpointer_arrow_list = self._apply_neighbor_function(
-                self._neighbor_backpointers)
-            plot_arrows_from_list(backpointer_arrow_list,
-                                  scale=1.05,
-                                  color=(0.1, .8, 0.1))
+                self._neighbor_backpointers
+            )
+            plot_arrows_from_list(
+                backpointer_arrow_list, scale=1.05, color=(0.1, 0.8, 0.1)
+            )
 
         if flag_backpointers_cost and self.has_backpointers:
             backpointer_cost_list = self._apply_neighbor_function(
-                self._neighbor_backpointers_cost)
-            offset = np.array([[0], [-.15]])
-            for (cost, coord) in backpointer_cost_list:
-                plot_text(coord + offset, f'g={cost:.2f}', color=(.8, 1., .8))
+                self._neighbor_backpointers_cost
+            )
+            offset = np.array([[0], [-0.15]])
+            for cost, coord in backpointer_cost_list:
+                plot_text(coord + offset, f"g={cost:.2f}", color=(0.8, 1.0, 0.8))
 
         if node_lists is not None:
             if not isinstance(node_lists[0], list):
                 node_lists = [node_lists]
-            markers = ['d', 'o', 's', '*', 'h', '^', '8']
+            markers = ["d", "o", "s", "*", "h", "^", "8"]
             for i, lst in enumerate(node_lists):
-                x_list = [self.graph_vector[e]['x'] for e in lst]
+                x_list = [self.graph_vector[e]["x"] for e in lst]
                 coords = np.hstack(x_list)
                 plt.plot(
                     coords[0, :],
@@ -218,8 +243,8 @@ class Graph:
         Returns the k nearest neighbors in the graph for a given point.
         """
 
-        x_graph = np.hstack([n['x'] for n in self.graph_vector])
-        distances_squared = np.sum((x_graph - x_query)**2, 0)
+        x_graph = np.hstack([n["x"] for n in self.graph_vector])
+        distances_squared = np.sum((x_graph - x_query) ** 2, 0)
         idx = np.argpartition(distances_squared, k_nearest)
         return idx[:k_nearest]
 
@@ -228,7 +253,10 @@ class Graph:
         Computes the heuristic  h given by the Euclidean distance between the nodes with indexes
         idx_x and  idx_goal.
         """
-        pass  # Substitute with your code
+        h_val = (
+            ((self.graph_vector[idx_x].x[0] - self.graph_vector[idx_goal].x[0]) ** 2)
+            + ((self.graph_vector[idx_x].x[1] - self.graph_vector[idx_goal].x[1]) ** 2)
+        ) ** 0.5
         return h_val
 
     def get_expand_list(self, idx_n_best, idx_closed):
@@ -279,8 +307,8 @@ class Graph:
 
 class SphereWorldGraph:
     """
-    A discretized version of the  SphereWorld from Homework 3 with the addition of a search
-function.
+        A discretized version of the  SphereWorld from Homework 3 with the addition of a search
+    function.
     """
 
     def __init__(self, nb_cells):
@@ -319,7 +347,7 @@ def graph_test_data_load(variable_name):
     """
     Loads data from the file graph_test_data.pkl.
     """
-    with open('graph_test_data.pkl', 'rb') as fid:
+    with open("graph_test_data.pkl", "rb") as fid:
         saved_data = pickle.load(fid)
     return saved_data[variable_name]
 
@@ -329,11 +357,11 @@ def graph_test_data_plot():
     Plot two solved graphs
     """
 
-    graph = Graph(graph_test_data_load('graphVector_solved'))
+    graph = Graph(graph_test_data_load("graphVector_solved"))
     plt.figure()
     graph.plot(flag_heuristic=True, idx_goal=1)
 
-    graph = Graph(graph_test_data_load('graphVectorMedium_solved'))
+    graph = Graph(graph_test_data_load("graphVectorMedium_solved"))
     plt.figure()
     graph.plot(flag_heuristic=True, idx_goal=14)
 
@@ -356,7 +384,7 @@ def grid2graph(grid):
     idx_assignment = range(0, nb_nodes)
 
     # Lookup table from xx,yy element to assigned index (-1 means not assigned)
-    idx_lookup = -1 * np.ones(fun_evalued.shape, 'int')
+    idx_lookup = -1 * np.ones(fun_evalued.shape, "int")
     for i_xx, i_yy, i_assigned in zip(idx_xx, idx_yy, idx_assignment):
         idx_lookup[i_xx, i_yy] = i_assigned
 
@@ -365,12 +393,15 @@ def grid2graph(grid):
         Finds the neighbors of a given element
         """
 
-        displacements = [(idx_xx + dx, idx_yy + dy) for dx in [-1, 0, 1]
-                         for dy in [-1, 0, 1] if not (dx == 0 and dy == 0)]
+        displacements = [
+            (idx_xx + dx, idx_yy + dy)
+            for dx in [-1, 0, 1]
+            for dy in [-1, 0, 1]
+            if not (dx == 0 and dy == 0)
+        ]
         neighbors = []
         for i_xx, i_yy in displacements:
-            if 0 <= i_xx < nb_xx and 0 <= i_yy < nb_yy and idx_lookup[
-                    i_xx, i_yy] >= 0:
+            if 0 <= i_xx < nb_xx and 0 <= i_yy < nb_yy and idx_lookup[i_xx, i_yy] >= 0:
                 neighbors.append(idx_lookup[i_xx, i_yy].item())
 
         return neighbors
@@ -380,21 +411,21 @@ def grid2graph(grid):
     for i_xx, i_yy, i_assigned in zip(idx_xx, idx_yy, idx_assignment):
         x_current = np.array([[grid.xx_grid[i_xx]], [grid.yy_grid[i_yy]]])
         neighbors = grid2graph_neighbors(i_xx, i_yy)
-        graph_vector[i_assigned] = {'x': x_current, 'neighbors': neighbors}
+        graph_vector[i_assigned] = {"x": x_current, "neighbors": neighbors}
 
     # Populate the 'neighbors_cost' field
     # Cannot be done in the loop above because not all 'x' fields would be filled
     for idx, n_current in enumerate(graph_vector):
-        x_current = n_current['x']
+        x_current = n_current["x"]
 
-        if len(n_current['neighbors']) > 0:
+        if len(n_current["neighbors"]) > 0:
             x_neighbors = np.hstack(
-                [graph_vector[idx]['x'] for idx in n_current['neighbors']])
-            neighbors_cost_np = np.sqrt(np.sum((x_neighbors - x_current)**2,
-                                               0))
-            graph_vector[idx]['neighbors_cost'] = list(neighbors_cost_np)
+                [graph_vector[idx]["x"] for idx in n_current["neighbors"]]
+            )
+            neighbors_cost_np = np.sqrt(np.sum((x_neighbors - x_current) ** 2, 0))
+            graph_vector[idx]["neighbors_cost"] = list(neighbors_cost_np)
         else:
-            graph_vector[idx]['neighbors_cost'] = []
+            graph_vector[idx]["neighbors_cost"] = []
 
     return Graph(graph_vector)
 
@@ -404,7 +435,7 @@ def test_nearest_neighbors():
     Tests Graph.nearest_neighbors by picking a random point and finding the 3 nearest neighbors
     in graphVectorMedium
     """
-    graph = Graph(graph_test_data_load('graphVectorMedium'))
+    graph = Graph(graph_test_data_load("graphVectorMedium"))
     x_query = np.array([[5], [4]]) * np.random.rand(2, 1)
     idx_neighbors = graph.nearest_neighbors(x_query, 3)
     graph.plot(node_lists=idx_neighbors)
@@ -417,9 +448,10 @@ def test_grid2graph():
     """
     xx_grid = np.linspace(0, 2 * pi, 40)
     yy_grid = np.linspace(0, pi, 20)
-    func = lambda x: (x[[1]] > pi / 2 or np.linalg.norm(x - np.ones(
-        (2, 1))) < 0.75) and not np.linalg.norm(x - np.array([[4], [2.5]])
-                                                ) < 0.5
+    func = (
+        lambda x: (x[[1]] > pi / 2 or np.linalg.norm(x - np.ones((2, 1))) < 0.75)
+        and not np.linalg.norm(x - np.array([[4], [2.5]])) < 0.5
+    )
     grid = me570_geometry.Grid(xx_grid, yy_grid)
     grid.eval(func)
     graph = grid2graph(grid)
