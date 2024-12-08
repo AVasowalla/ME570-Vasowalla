@@ -125,8 +125,12 @@ def move(bot_id):
     if bot_orientations[bot_id] < 0:
         bot_orientations[bot_id] += 2 * np.pi
 
-    bot_x_coords[bot_id] += command[0] * TIME_STEP * np.cos(bot_orientations[bot_id])
-    bot_y_coords[bot_id] += command[0] * TIME_STEP * np.sin(bot_orientations[bot_id])
+    bot_x_coords[bot_id] += (
+        command[0] * TIME_STEP * np.cos(bot_orientations[bot_id] + (np.pi / 2))
+    )
+    bot_y_coords[bot_id] += (
+        command[0] * TIME_STEP * np.sin(bot_orientations[bot_id] + (np.pi / 2))
+    )
 
 
 def calc_angles():
@@ -145,8 +149,10 @@ def calc_angles():
             else:
                 artificial_point = np.array(
                     [
-                        bot_location[0] + np.cos(bot_orientations[bot_id]),
-                        bot_location[1] + np.sin(bot_orientations[bot_id]),
+                        bot_location[0]
+                        + np.cos(bot_orientations[bot_id] + (np.pi / 2)),
+                        bot_location[1]
+                        + np.sin(bot_orientations[bot_id] + (np.pi / 2)),
                     ]
                 )
                 line_one = artificial_point - bot_location
