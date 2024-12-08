@@ -22,13 +22,13 @@ visibility_matrix = np.full((NUM_BOTS, NUM_BOTS), False)
 target_found = np.full(NUM_BOTS, False)
 
 TIME_STEP = 0.1
-LIN_SPEED = 5
+LIN_SPEED = 0.5
 ANG_SPEED = 1
 
 
 def get_command(bot_id):
     global target_found
-    angle_tol = 0.08
+    angle_tol = 0.1
     epsilon = 1e-6  # Small value to avoid divide by 0
     msg = [0.0, 0.0]  # linear x and angular z velocities
     target_angles_bot = target_angles[bot_id]
@@ -208,39 +208,35 @@ if __name__ == "__main__":
 
     # Convert the list to a numpy array
     target_angles = np.array(target_angles_data)
+    plt.ion()
+    fig, ax = plt.subplots(figsize=(8, 8))
+    # Set plot labels and title
+    ax.set_xlabel("X-axis", fontsize=12)
+    ax.set_ylabel("Y-axis", fontsize=12)
+    ax.set_xlim(-10, 10)
+    ax.set_ylim(-10, 10)
+    ax.grid(True, linestyle="--", alpha=0.7)
+    ax.axhline(0, color="black", linewidth=0.5)
+    ax.axvline(0, color="black", linewidth=0.5)
+
+    bot_plots = [
+        ax.plot([], [], color="blue", marker=(3, 0, 0), label=f"Robot {i}")[0]
+        for i in range(NUM_BOTS)
+    ]
+    bot_texts = [ax.text(0, 0, "", fontsize=10) for _ in range(NUM_BOTS)]
 
     while True:
         calc_angles()
         print(normal_angles[0])
         print(target_angles[0])
 
-        # Create the plot
-        plt.figure(figsize=(8, 8))
-        for i in range(NUM_BOTS):
-            plt.plot(
-                bot_x_coords[i],
-                bot_y_coords[i],
-                color="blue",
-                marker=(3, 0, np.rad2deg(bot_orientations[i])),
-                label="Points",
-            )
-
-        # Annotate the points
-        for i in range(NUM_BOTS):
-            plt.text(bot_x_coords[i] + 0.2, bot_y_coords[i], BOT_NAMES[i], fontsize=10)
-
-        # Set plot labels and title
-        plt.xlabel("X-axis", fontsize=12)
-        plt.ylabel("Y-axis", fontsize=12)
-        plt.xlim(-10, 10)
-        plt.ylim(-10, 10)
-
-        # Add grid and legend
-        plt.grid(True, linestyle="--", alpha=0.7)
-        plt.axhline(0, color="black", linewidth=0.5)
-        plt.axvline(0, color="black", linewidth=0.5)
+        for i, bot_plot in enumerate(bot_plots):
+            bot_plot.set_data([bot_x_coords[i]], [bot_y_coords[i]])
+            bot_plot.set_marker((3, 0, np.rad2deg(bot_orientations[i])))
+            bot_texts[i].set_position((bot_x_coords[i] + 0.2, bot_y_coords[i]))
+            bot_texts[i].set_text(BOT_NAMES[i])
 
         # Display the plot
-        plt.pause(0.5)
-        plt.close()
+        plt.draw()
+        plt.pause(0.1)
         move(0)
