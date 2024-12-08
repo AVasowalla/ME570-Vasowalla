@@ -10,12 +10,11 @@ NUM_BOTS = 3
 bot_x_coords = np.array([5.0, -5.0, 5.0])
 bot_y_coords = np.array([-5.0, 5.0, 5.0])
 bot_orientations = np.zeros(NUM_BOTS)
-bot_orientations[0] = np.pi
 BOT_NAMES = np.empty(NUM_BOTS, dtype=object)
 for i in range(NUM_BOTS):
     BOT_NAMES[i] = f"Robot {i}"
 
-ROBOT_FOV = np.pi
+ROBOT_FOV = 2 * np.pi
 vision_angles = np.full((NUM_BOTS, NUM_BOTS), -1.0)
 normal_angles = np.full((NUM_BOTS, NUM_BOTS), -1.0)
 visibility_matrix = np.full((NUM_BOTS, NUM_BOTS), False)
@@ -23,7 +22,7 @@ target_found = np.full(NUM_BOTS, False)
 
 TIME_STEP = 0.1
 LIN_SPEED = 0.5
-ANG_SPEED = 1
+ANG_SPEED = 0.1
 
 
 def get_command(bot_id):
@@ -39,13 +38,17 @@ def get_command(bot_id):
             msg[1] = 0.0
         target_tag_indicies = np.where(target_angles_bot >= 0)
         current_tag_angles = tag_angles[target_tag_indicies]
-        for i, angle in enumerate(tag_angles):
-            if angle >= 0:
+        for i, visible in enumerate(visibility_matrix[bot_id]):
+            if visible:
                 target_found[i] = True
         if not all(target_found[target_tag_indicies]):
             print("all targets not found")
             msg[0] = 0.0
-            msg[1] = ANG_SPEED
+            msg[1] = -3 * ANG_SPEED
+            return msg
+
+        print(abs(target_angles_bot[target_tag_indicies] - current_tag_angles))
+
         if all(
             abs(target_angles_bot[target_tag_indicies] - current_tag_angles)
             <= angle_tol
@@ -53,6 +56,7 @@ def get_command(bot_id):
             print("target position reached")
             msg[0] = 0.0
             msg[1] = 0.0
+            return msg
 
         theta_1_c = current_tag_angles[0]
         theta_2_c = current_tag_angles[1]
@@ -82,40 +86,36 @@ def get_command(bot_id):
         if nav_angle < 0:
             nav_angle += 2 * np.pi
 
-        print(np.rad2deg(nav_angle))
+        if abs(bot_orientations[bot_id] - nav_angle) < angle_tol:
+            current_tag_angles.fill(-1)
+            msg[0] = LIN_SPEED
+            msg[1] = 0.0
+            target_found = np.full(NUM_BOTS, False)
+            return msg
 
         if bot_orientations[bot_id] < nav_angle + angle_tol:
             if bot_orientations[bot_id] >= (2 * np.pi):
                 bot_orientations[bot_id] -= 2 * np.pi
-            print("turning to target")
             msg[0] = 0.0
             msg[1] = ANG_SPEED
+            return msg
 
         if bot_orientations[bot_id] > nav_angle - angle_tol:
             if bot_orientations[bot_id] < 0.0:
                 bot_orientations[bot_id] += 2 * np.pi
-            print("turning to target")
             msg[0] = 0.0
             msg[1] = -ANG_SPEED
-
-        if abs(bot_orientations[bot_id] - nav_angle) < angle_tol:
-            current_tag_angles.fill(-1)
-            print("moving forward")
-            msg[0] = LIN_SPEED
-            msg[1] = 0.0
-            target_found = np.full(NUM_BOTS, False)
+            return msg
 
     except Exception as e:
         print(f"Stopping {e}")
         msg[0] = 0.0
         msg[1] = 0.0
-
-    return msg
+        return msg
 
 
 def move(bot_id):
     command = get_command(bot_id)
-    print(np.rad2deg(bot_orientations[bot_id]))
 
     bot_orientations[bot_id] += command[1] * TIME_STEP
 
@@ -125,12 +125,8 @@ def move(bot_id):
     if bot_orientations[bot_id] < 0:
         bot_orientations[bot_id] += 2 * np.pi
 
-    bot_x_coords[bot_id] += (
-        command[0] * TIME_STEP * np.cos(bot_orientations[bot_id] + (np.pi / 2))
-    )
-    bot_y_coords[bot_id] += (
-        command[0] * TIME_STEP * np.sin(bot_orientations[bot_id] + (np.pi / 2))
-    )
+    bot_x_coords[bot_id] += command[0] * TIME_STEP * np.cos(bot_orientations[bot_id])
+    bot_y_coords[bot_id] += command[0] * TIME_STEP * np.sin(bot_orientations[bot_id])
 
 
 def calc_angles():
@@ -149,10 +145,8 @@ def calc_angles():
             else:
                 artificial_point = np.array(
                     [
-                        bot_location[0]
-                        + np.cos(bot_orientations[bot_id] + (np.pi / 2)),
-                        bot_location[1]
-                        + np.sin(bot_orientations[bot_id] + (np.pi / 2)),
+                        bot_location[0] + np.cos(bot_orientations[bot_id]),
+                        bot_location[1] + np.sin(bot_orientations[bot_id]),
                     ]
                 )
                 line_one = artificial_point - bot_location
@@ -172,9 +166,16 @@ def calc_angles():
                     )
                     + 2 * np.pi
                 ) % (2 * np.pi)
+
                 normal_angles[bot_id][neighbor] = (
                     vision_angles[bot_id][neighbor] + bot_orientations[bot_id]
                 )
+
+                if normal_angles[bot_id][neighbor] > 2 * np.pi:
+                    normal_angles[bot_id][neighbor] -= 2 * np.pi
+
+                if normal_angles[bot_id][neighbor] < 0:
+                    normal_angles[bot_id][neighbor] += 2 * np.pi
 
                 if vision_angles[bot_id][neighbor] <= np.pi:
                     visibility_matrix[bot_id][neighbor] = vision_angles[bot_id][
@@ -186,6 +187,11 @@ def calc_angles():
                     ][neighbor] <= (ROBOT_FOV / 2)
 
 
+def move_all():
+    for bot in range(NUM_BOTS):
+        move(bot)
+
+
 if __name__ == "__main__":
 
     target_angles_data = []
@@ -193,7 +199,7 @@ if __name__ == "__main__":
     # Loop to collect input for each row
     print(
         (
-            "Enter the target angles for each robot in radians using -1.0 for non-target robots,"
+            "Enter the target angles for each robot in degrees using -1.0 for non-target robots,"
             " separated by space (e.g., '1 2 ...'):"
         )
     )
@@ -203,7 +209,7 @@ if __name__ == "__main__":
             print(f"Each robot must have exactly {NUM_BOTS} target angles.")
             row = input(f"Robot {i}: ").split()  # Split input into a list
         target_angles_data.append(
-            [float(num) for num in row]
+            [np.deg2rad(float(num)) for num in row]
         )  # Convert elements to floats
 
     # Convert the list to a numpy array
@@ -227,8 +233,6 @@ if __name__ == "__main__":
 
     while True:
         calc_angles()
-        print(normal_angles[0])
-        print(target_angles[0])
 
         for i, bot_plot in enumerate(bot_plots):
             bot_plot.set_data([bot_x_coords[i]], [bot_y_coords[i]])
