@@ -10,8 +10,8 @@ from rclpy.node import Node
 import numpy as np
 
 from turtlesim.msg import Pose
-from geometry_msgs.msg import Twist
-from bearing_formation_control.msg import Command, Targets, Sensordata
+from geometry_msgs.msg import Twist, Point
+from bearing_formation_control.msg import Targets
 
 ROBOT_ID = 0
 
@@ -29,7 +29,9 @@ class RobotControlPublisher(Node):
         super().__init__("robot_control_publisher")
         self.declare_parameter("robot_id", 0)
         self.robot_id = self.get_parameter("robot_id").value
-        self.publisher_ = self.create_publisher(Twist, "/diff_cont/cmd_vel_unstamped", 10)
+        self.publisher_ = self.create_publisher(
+            Twist, "/diff_cont/cmd_vel_unstamped", 10
+        )
         timer_period = 0.5  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
@@ -43,7 +45,7 @@ class SensorDataSubscriber(Node):
     def __init__(self):
         super().__init__("sensor_data_subscriber")
         self.subscription = self.create_subscription(
-            Sensordata, "turtle/sensor", self.listener_callback, 10
+            Point, "turtle/sensor", self.listener_callback, 10
         )
         self.subscription
 
@@ -164,7 +166,7 @@ def get_command(publisher):
         publisher.get_logger().error(f"Error in get_command: {e}")
         msg.linear.x = 0.0
         msg.angular.z = 0.0
-        
+
     return msg
 
 
