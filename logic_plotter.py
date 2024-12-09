@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 NUM_BOTS = 3  # Defines the number of robots in the formation
+PID_P = 5
 
 bot_x_coords = np.random.uniform(
     -10, 10, (NUM_BOTS)
@@ -16,6 +17,8 @@ bot_y_coords = np.random.uniform(
 )  # Randomizes the starting positions of the robots
 bot_x_coords[2] = 0  # For Testing
 bot_y_coords[2] = 10  # For Testing
+bot_x_coords[1] = 5  # For Testing
+bot_y_coords[1] = 5  # For Testing
 # bot_x_coords = np.array([5.0, -5.0, 5.0]) # For Testing
 # bot_y_coords = np.array([-5.0, 5.0, 5.0]) # For Testing
 bot_orientations = np.full(
@@ -40,7 +43,7 @@ target_found = np.full(
 )  # Updates when moving to know if a robot has seen another bot at this location
 
 TIME_STEP = 0.1  # For simulation purposes
-LIN_SPEED = 0.5  # Linear speed of the robot
+LIN_SPEED = 0.75  # Linear speed of the robot
 ANG_SPEED = 0.1  # Angular speed of the robot
 
 
@@ -67,7 +70,7 @@ def get_command(bot_id):
 
         beta_1_c = bearings[bot_id][target_indicies][0] + epsilon
         beta_2_c = bearings[bot_id][target_indicies][1] + epsilon
-        beta_r = bearings[target_indicies[0][0]][target_indicies[0][1]] + epsilon
+        beta_r = target_angles[target_indicies[0][0]][target_indicies[0][1]] + epsilon
 
         beta_1_t = target_angles[bot_id][target_indicies][0] + epsilon
         beta_2_t = target_angles[bot_id][target_indicies][1] + epsilon
@@ -108,10 +111,16 @@ def get_command(bot_id):
             target_found = np.full(NUM_BOTS, False)
 
         elif bot_orientations[bot_id] < nav_angle + angle_tol:
-            msg[1] = ANG_SPEED
+            if nav_angle - bot_orientations[bot_id] < np.pi:
+                msg[1] = PID_P * abs(nav_angle - bot_orientations[bot_id]) * ANG_SPEED
+            else:
+                msg[1] = -PID_P * abs(nav_angle - bot_orientations[bot_id]) * ANG_SPEED
 
         elif bot_orientations[bot_id] > nav_angle - angle_tol:
-            msg[1] = -ANG_SPEED
+            if bot_orientations[bot_id] - nav_angle < np.pi:
+                msg[1] = -PID_P * abs(nav_angle - bot_orientations[bot_id]) * ANG_SPEED
+            else:
+                msg[1] = PID_P * abs(nav_angle - bot_orientations[bot_id]) * ANG_SPEED
 
     except Exception:
         pass
@@ -233,8 +242,8 @@ if __name__ == "__main__":
     # Set plot labels and title
     ax.set_xlabel("X-axis", fontsize=12)
     ax.set_ylabel("Y-axis", fontsize=12)
-    ax.set_xlim(-10, 10)
-    ax.set_ylim(-10, 10)
+    ax.set_xlim(-25, 25)
+    ax.set_ylim(-25, 25)
     ax.grid(True, linestyle="--", alpha=0.7)
     ax.axhline(0, color="black", linewidth=0.5)
     ax.axvline(0, color="black", linewidth=0.5)
@@ -269,6 +278,5 @@ if __name__ == "__main__":
 
         # Display the plot
         plt.draw()
-        plt.pause(0.01)
+        plt.pause(0.0001)
         move(0)
-        move(1)
