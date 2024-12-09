@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+This script simulates a bearing only formation control algorithm
+"""
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -69,17 +72,21 @@ def get_command(bot_id):
         beta_1_t = target_angles[bot_id][target_indicies][0] + epsilon
         beta_2_t = target_angles[bot_id][target_indicies][1] + epsilon
 
-        x_c = (np.sin(beta_r) + np.tan(beta_2_c) * np.sin(beta_r)) / (
-            np.tan(beta_1_c) - np.tan(beta_2_c) + epsilon
+        delta_x = np.sin(beta_r) * (
+            (1 + np.tan(beta_2_t)) / (np.tan(beta_1_t) - np.tan(beta_2_t) + epsilon)
+            - (1 + np.tan(beta_2_c)) / (np.tan(beta_1_c) - np.tan(beta_2_c) + epsilon)
         )
-        y_c = np.tan(beta_1_c) * x_c
 
-        x_t = (np.sin(beta_r) + np.tan(beta_2_t) * np.sin(beta_r)) / (
-            np.tan(beta_1_t) - np.tan(beta_2_t) + epsilon
+        delta_y = np.sin(beta_r) * (
+            (
+                (np.tan(beta_1_t) + np.tan(beta_2_t))
+                / (np.tan(beta_1_t) - np.tan(beta_2_t) + epsilon)
+            )
+            - (
+                (np.tan(beta_1_c) + np.tan(beta_2_c))
+                / (np.tan(beta_1_c) - np.tan(beta_2_c) + epsilon)
+            )
         )
-        y_t = np.tan(beta_1_t) * x_t
-        delta_x = x_t - x_c
-        delta_y = y_t - y_c
 
         nav_angle = (np.arctan2(delta_y, delta_x) + 2 * np.pi) % (2 * np.pi)
         if not all(target_found[target_indicies]):
@@ -106,13 +113,17 @@ def get_command(bot_id):
         elif bot_orientations[bot_id] > nav_angle - angle_tol:
             msg[1] = -ANG_SPEED
 
-    except Exception as e:
-        print(f"Stopping {e}")
+    except Exception:
+        pass
 
     return msg
 
 
 def move(bot_id):
+    """
+    Moves the Robot with ID bot_id based on the command from get_command()
+    """
+
     command = get_command(bot_id)
 
     bot_orientations[bot_id] += command[1] * TIME_STEP
@@ -123,6 +134,10 @@ def move(bot_id):
 
 
 def calc_angles():
+    """
+    Calculates the angles between robots for all combinations of robots.
+    """
+
     for bot_id in range(NUM_BOTS):
         bot_location = np.array([bot_x_coords[bot_id], bot_y_coords[bot_id]])
         neighbor_locations_x = np.copy(bot_x_coords)
@@ -176,6 +191,10 @@ def calc_angles():
 
 
 def move_all():
+    """
+    Moves all robots.
+    """
+
     for bot in range(NUM_BOTS):
         move(bot)
 
@@ -205,7 +224,7 @@ if __name__ == "__main__":
     target_angles = np.array(
         [
             [np.deg2rad(-1.0), np.deg2rad(0.0), np.deg2rad(45.0)],
-            [np.deg2rad(180.0), np.deg2rad(-1.0), np.deg2rad(45.0)],
+            [np.deg2rad(180.0), np.deg2rad(-1.0), np.deg2rad(135.0)],
             [np.deg2rad(225.0), np.deg2rad(315.0), np.deg2rad(-1.0)],
         ]
     )
@@ -253,4 +272,3 @@ if __name__ == "__main__":
         plt.pause(0.01)
         move(0)
         move(1)
-        # get_command(0)
