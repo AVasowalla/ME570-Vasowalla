@@ -8,39 +8,11 @@ import numpy as np
 
 NUM_BOTS = 3  # Defines the number of robots in the formation
 PID_P = 5
-
-bot_x_coords = np.random.uniform(
-    -10, 10, (NUM_BOTS)
-)  # Randomizes the starting positions of the robots
-bot_y_coords = np.random.uniform(
-    -10, 10, (NUM_BOTS)
-)  # Randomizes the starting positions of the robots
-bot_x_coords[2] = 0  # For Testing
-bot_y_coords[2] = 10  # For Testing
-bot_x_coords[1] = 5  # For Testing
-bot_y_coords[1] = 5  # For Testing
-# bot_x_coords = np.array([5.0, -5.0, 5.0]) # For Testing
-# bot_y_coords = np.array([-5.0, 5.0, 5.0]) # For Testing
-bot_orientations = np.full(
-    NUM_BOTS, np.pi
-)  # Sets all robots to face positive y initially
 BOT_NAMES = np.empty(NUM_BOTS, dtype=object)
 for i in range(NUM_BOTS):
     BOT_NAMES[i] = f"Robot {i}"
 
 ROBOT_FOV = 2 * np.pi  # Parameter for the camera FOV
-vision_angles = np.full(
-    (NUM_BOTS, NUM_BOTS), -1.0
-)  # Stores angles from bot to bot within the bot's frame
-bearings = np.full(
-    (NUM_BOTS, NUM_BOTS), -1.0
-)  # Stores bearings from bot to bot w.r.t +x (-1.0 on the diagonal and any unknown bearings)
-visibility_matrix = np.full(
-    (NUM_BOTS, NUM_BOTS), False
-)  # Stores the bot to bot visibility based on the FOV
-target_found = np.full(
-    NUM_BOTS, False
-)  # Updates when moving to know if a robot has seen another bot at this location
 
 TIME_STEP = 0.1  # For simulation purposes
 LIN_SPEED = 0.75  # Linear speed of the robot
@@ -104,19 +76,23 @@ def get_command(bot_id):
             <= angle_tol
         ):
             print(f"target position reached for Robot {bot_id}")
+            bots_converged[bot_id] = True
 
         elif abs(bot_orientations[bot_id] - nav_angle) < angle_tol:
+            bots_converged[bot_id] = False
             bearings[bot_id][target_indicies].fill(-1)
             msg[0] = LIN_SPEED
             target_found = np.full(NUM_BOTS, False)
 
         elif bot_orientations[bot_id] < nav_angle + angle_tol:
+            bots_converged[bot_id] = False
             if nav_angle - bot_orientations[bot_id] < np.pi:
                 msg[1] = PID_P * abs(nav_angle - bot_orientations[bot_id]) * ANG_SPEED
             else:
                 msg[1] = -PID_P * abs(nav_angle - bot_orientations[bot_id]) * ANG_SPEED
 
         elif bot_orientations[bot_id] > nav_angle - angle_tol:
+            bots_converged[bot_id] = False
             if bot_orientations[bot_id] - nav_angle < np.pi:
                 msg[1] = -PID_P * abs(nav_angle - bot_orientations[bot_id]) * ANG_SPEED
             else:
@@ -128,18 +104,22 @@ def get_command(bot_id):
     return msg
 
 
-def move(bot_id):
+def move(bot_ids):
     """
     Moves the Robot with ID bot_id based on the command from get_command()
     """
+    for bot_id in bot_ids:
+        command = get_command(bot_id)
 
-    command = get_command(bot_id)
+        bot_orientations[bot_id] += command[1] * TIME_STEP
+        bot_orientations[bot_id] = (bot_orientations[bot_id] + 2 * np.pi) % (2 * np.pi)
 
-    bot_orientations[bot_id] += command[1] * TIME_STEP
-    bot_orientations[bot_id] = (bot_orientations[bot_id] + 2 * np.pi) % (2 * np.pi)
-
-    bot_x_coords[bot_id] += command[0] * TIME_STEP * np.cos(bot_orientations[bot_id])
-    bot_y_coords[bot_id] += command[0] * TIME_STEP * np.sin(bot_orientations[bot_id])
+        bot_x_coords[bot_id] += (
+            command[0] * TIME_STEP * np.cos(bot_orientations[bot_id])
+        )
+        bot_y_coords[bot_id] += (
+            command[0] * TIME_STEP * np.sin(bot_orientations[bot_id])
+        )
 
 
 def calc_angles():
@@ -199,47 +179,56 @@ def calc_angles():
                     ][neighbor] <= (ROBOT_FOV / 2)
 
 
-def move_all():
+def get_user_input():
     """
-    Moves all robots.
+    Gets user input for the target angles
     """
 
-    for bot in range(NUM_BOTS):
-        move(bot)
-
-
-if __name__ == "__main__":
-
-    # target_angles_data = []
-
-    # Loop to collect input for each row
-    # print(
-    #     (
-    #         "Enter the target angles for each robot in degrees using -1.0 for non-target robots,"
-    #         " separated by space (e.g., '1 2 ...'):"
-    #     )
-    # )
-    # for i in range(NUM_BOTS):
-    #     row = input(f"Robot {i}: ").split()  # Split input into a list
-    #     while len(row) != NUM_BOTS:
-    #         print(f"Each robot must have exactly {NUM_BOTS} target angles.")
-    #         row = input(f"Robot {i}: ").split()  # Split input into a list
-    #     target_angles_data.append(
-    #         [np.deg2rad(float(num)) for num in row]
-    #     )  # Convert elements to floats
-
-    # Convert the list to a numpy array
-    # target_angles = np.array(target_angles_data)
-    target_angles = np.array(
-        [
-            [np.deg2rad(-1.0), np.deg2rad(0.0), np.deg2rad(45.0)],
-            [np.deg2rad(180.0), np.deg2rad(-1.0), np.deg2rad(135.0)],
-            [np.deg2rad(225.0), np.deg2rad(315.0), np.deg2rad(-1.0)],
-        ]
+    target_angles_data = []
+    print(
+        (
+            "Enter the target angles for each robot in degrees using -1.0 for non-target robots"
+            "and itself, separated by space (e.g., '1 2 ...'):"
+        )
     )
-    plt.ion()
+    for j in range(NUM_BOTS):
+        row = input(f"Robot {j}: ").split()
+        while len(row) != NUM_BOTS:
+            print(f"Each robot must have exactly {NUM_BOTS} target angles.")
+            row = input(f"Robot {j}: ").split()
+        target_angles_data.append([np.deg2rad(float(num)) for num in row])
+
+    return np.array(target_angles_data)
+
+
+def init_sim():
+    """
+    initializes all standard variables
+    """
+    global bot_x_coords, bot_y_coords, bot_orientations, bots_converged, vision_angles
+    global bearings, visibility_matrix, target_found
+    # Randomizes the starting positions of the robots
+    bot_x_coords = np.random.uniform(-10, 10, (NUM_BOTS))
+    bot_y_coords = np.random.uniform(-10, 10, (NUM_BOTS))
+    # Sets all robots to face positive y initially
+    bot_orientations = np.full(NUM_BOTS, np.pi)
+    # Tracking which robots have reached targets
+    bots_converged = np.full(NUM_BOTS, True)
+    # Stores angles from bot to bot within the bot's frame
+    vision_angles = np.full((NUM_BOTS, NUM_BOTS), -1.0)
+    # Stores bearings from bot to bot w.r.t +x (-1.0 on the diagonal and any unknown bearings)
+    bearings = np.full((NUM_BOTS, NUM_BOTS), -1.0)
+    # Stores the bot to bot visibility based on the FOV
+    visibility_matrix = np.full((NUM_BOTS, NUM_BOTS), False)
+    # Updates when moving to know if a robot has seen another bot at this location
+    target_found = np.full(NUM_BOTS, False)
+
+
+def init_plot():
+    """
+    Initialize figure
+    """
     fig, ax = plt.subplots(figsize=(8, 8))
-    # Set plot labels and title
     ax.set_xlabel("X-axis", fontsize=12)
     ax.set_ylabel("Y-axis", fontsize=12)
     ax.set_xlim(-25, 25)
@@ -247,7 +236,14 @@ if __name__ == "__main__":
     ax.grid(True, linestyle="--", alpha=0.7)
     ax.axhline(0, color="black", linewidth=0.5)
     ax.axvline(0, color="black", linewidth=0.5)
+    return fig, ax
 
+
+def run_sim(moving_bots):
+    """
+    Runs and plots the simulation.
+    """
+    fig, ax = init_plot()
     bot_plots = [
         ax.plot([], [], color="blue", marker=(3, 0, 0), label=f"Robot {i}")[0]
         for i in range(NUM_BOTS)
@@ -276,7 +272,41 @@ if __name__ == "__main__":
             bot_texts[i].set_position((bot_x_coords[i] + 0.2, bot_y_coords[i]))
             bot_texts[i].set_text(BOT_NAMES[i])
 
-        # Display the plot
-        plt.draw()
-        plt.pause(0.0001)
-        move(0)
+            move(moving_bots)
+            plt.draw()
+            plt.pause(0.0001)
+
+        if all(bots_converged):
+            break
+
+
+if __name__ == "__main__":
+
+    init_sim()
+    bot_x_coords[1] = 5  # For Testing
+    bot_y_coords[1] = 5  # For Testing
+    bot_x_coords[2] = 0  # For Testing
+    bot_y_coords[2] = 10  # For Testing
+
+    target_angles = np.deg2rad(
+        np.array([[-1.0, 0.0, 45.0], [180.0, -1.0, 135.0], [225.0, 315.0, -1.0]])
+    )
+
+    run_sim([0])
+    plt.show()
+
+    plt.close("all")
+
+    plt.pause(2)
+
+    init_sim()
+    bot_x_coords[2] = 0  # For Testing
+    bot_y_coords[2] = 10  # For Testing
+
+    target_angles = np.deg2rad(
+        np.array([[-1.0, 0.0, 45.0], [180.0, -1.0, 135.0], [225.0, 315.0, -1.0]])
+    )
+
+    run_sim([0, 1])
+    # Display the final plots
+    plt.show()
