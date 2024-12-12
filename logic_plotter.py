@@ -17,6 +17,7 @@ ROBOT_FOV = 2 * np.pi  # Parameter for the camera FOV
 TIME_STEP = 0.1  # For simulation purposes
 LIN_SPEED = 0.75  # Linear speed of the robot
 ANG_SPEED = 0.1  # Angular speed of the robot
+NUM_TESTS = 1000
 
 
 def get_command(bot_id):
@@ -75,7 +76,7 @@ def get_command(bot_id):
             )
             <= angle_tol
         ):
-            print(f"target position reached for Robot {bot_id}")
+            # print(f"target position reached for Robot {bot_id}")
             bots_converged[bot_id] = True
 
         elif abs(bot_orientations[bot_id] - nav_angle) < angle_tol:
@@ -222,6 +223,7 @@ def init_sim():
     visibility_matrix = np.full((NUM_BOTS, NUM_BOTS), False)
     # Updates when moving to know if a robot has seen another bot at this location
     target_found = np.full(NUM_BOTS, False)
+    # Counter to check successful sims
 
 
 def init_plot():
@@ -239,10 +241,11 @@ def init_plot():
     return fig, ax
 
 
-def run_sim(moving_bots):
+def run_sim(moving_bots, plot=False):
     """
     Runs and plots the simulation.
     """
+    global success_count
     fig, ax = init_plot()
     bot_plots = [
         ax.plot([], [], color="blue", marker=(3, 0, 0), label=f"Robot {i}")[0]
@@ -256,6 +259,8 @@ def run_sim(moving_bots):
         ax.plot([], [], color="blue", linestyle="--", alpha=0.5)[0]
         for _ in range(NUM_BOTS)
     ]
+
+    steps = 0
 
     while True:
         calc_angles()
@@ -273,40 +278,135 @@ def run_sim(moving_bots):
             bot_texts[i].set_text(BOT_NAMES[i])
 
             move(moving_bots)
-            plt.draw()
-            plt.pause(0.0001)
+            if plot:
+                plt.draw()
+                plt.pause(0.05)
+        steps += 1
 
         if all(bots_converged):
+            # print("Success")
+            success_count += 1
+            break
+        if steps >= 1000:
+            # print("Failed")
             break
 
 
 if __name__ == "__main__":
+    success_count = 0
+    for _ in range(NUM_TESTS):
+        init_sim()
+        bot_x_coords[1] = 5  # For Testing
+        bot_y_coords[1] = 5  # For Testing
+        bot_x_coords[2] = 0  # For Testing
+        bot_y_coords[2] = 10  # For Testing
 
-    init_sim()
-    bot_x_coords[1] = 5  # For Testing
-    bot_y_coords[1] = 5  # For Testing
-    bot_x_coords[2] = 0  # For Testing
-    bot_y_coords[2] = 10  # For Testing
+        target_angles = np.deg2rad(
+            np.array([[-1.0, 0.0, 45.0], [180.0, -1.0, 135.0], [225.0, 315.0, -1.0]])
+        )
 
-    target_angles = np.deg2rad(
-        np.array([[-1.0, 0.0, 45.0], [180.0, -1.0, 135.0], [225.0, 315.0, -1.0]])
+        run_sim([0])
+        plt.close("all")
+    print(
+        "Results for 1000 tests forming equilateral triangle pointing up, one moving bot"
     )
+    print(success_count / NUM_TESTS)
 
-    run_sim([0])
-    plt.show()
+    success_count = 0
+    for _ in range(NUM_TESTS):
+        init_sim()
+        bot_x_coords[2] = 0  # For Testing
+        bot_y_coords[2] = 10  # For Testing
 
-    plt.close("all")
+        target_angles = np.deg2rad(
+            np.array([[-1.0, 0.0, 45.0], [180.0, -1.0, 135.0], [225.0, 315.0, -1.0]])
+        )
 
-    plt.pause(2)
-
-    init_sim()
-    bot_x_coords[2] = 0  # For Testing
-    bot_y_coords[2] = 10  # For Testing
-
-    target_angles = np.deg2rad(
-        np.array([[-1.0, 0.0, 45.0], [180.0, -1.0, 135.0], [225.0, 315.0, -1.0]])
+        run_sim([0, 1])
+        plt.close("all")
+    print(
+        "Results for 1000 tests forming equilateral triangle pointing up, two moving bots"
     )
+    print(success_count / NUM_TESTS)
 
-    run_sim([0, 1])
-    # Display the final plots
-    plt.show()
+    success_count = 0
+    for _ in range(NUM_TESTS):
+        init_sim()
+
+        target_angles = np.deg2rad(
+            np.array([[-1.0, 0.0, 45.0], [180.0, -1.0, 135.0], [225.0, 315.0, -1.0]])
+        )
+
+        run_sim([0, 1, 2])
+        plt.close("all")
+    print(
+        "Results for 1000 tests forming equilateral triangle pointing up, three moving bots"
+    )
+    print(success_count / NUM_TESTS)
+
+    success_count = 0
+    for _ in range(NUM_TESTS):
+        init_sim()
+        bot_x_coords[1] = 4  # For Testing
+        bot_y_coords[1] = -4  # For Testing
+        bot_x_coords[2] = 5  # For Testing
+        bot_y_coords[2] = 6  # For Testing
+
+        target_angles = np.deg2rad(
+            np.array(
+                [
+                    [-1.0, 229.3987, 296.5651],
+                    [49.3987, -1.0, 354.2894],
+                    [116.5651, 174.2894, -1.0],
+                ]
+            )
+        )
+
+        run_sim([0])
+        plt.close("all")
+    print("Results for 1000 tests forming scalene triangle pointing up, one moving bot")
+    print(success_count / NUM_TESTS)
+
+    success_count = 0
+    for _ in range(NUM_TESTS):
+        init_sim()
+        bot_x_coords[2] = 5  # For Testing
+        bot_y_coords[2] = 6  # For Testing
+
+        target_angles = np.deg2rad(
+            np.array(
+                [
+                    [-1.0, 229.3987, 296.5651],
+                    [49.3987, -1.0, 354.2894],
+                    [116.5651, 174.2894, -1.0],
+                ]
+            )
+        )
+
+        run_sim([0, 1])
+        plt.close("all")
+    print(
+        "Results for 1000 tests forming scalene triangle pointing up, two moving bots"
+    )
+    print(success_count / NUM_TESTS)
+
+    success_count = 0
+    for _ in range(NUM_TESTS):
+        init_sim()
+
+        target_angles = np.deg2rad(
+            np.array(
+                [
+                    [-1.0, 229.3987, 296.5651],
+                    [49.3987, -1.0, 354.2894],
+                    [116.5651, 174.2894, -1.0],
+                ]
+            )
+        )
+
+        run_sim([0, 1, 2])
+        plt.close("all")
+    print(
+        "Results for 1000 tests forming scalene triangle pointing up, three moving bots"
+    )
+    print(success_count / NUM_TESTS)
